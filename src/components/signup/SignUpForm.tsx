@@ -112,8 +112,11 @@ export const SignUpForm = () => {
             </h2>
 
             <div className="flex justify-center mt-6">
-              <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden">
-                <div onClick={onAvatarClick} className="cursor-pointer">
+              <div
+                onClick={onAvatarClick}
+                className="cursor-pointer w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden"
+              >
+                <div className="cursor-pointer">
                   <img
                     src={
                       avatar
@@ -128,7 +131,7 @@ export const SignUpForm = () => {
             </div>
 
             <p className="mt-2 text-center text-gray-400">Choose picture</p>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4 ">
               <div>
                 <input
                   type="file"
