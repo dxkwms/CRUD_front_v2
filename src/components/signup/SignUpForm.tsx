@@ -2,11 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Formik, Form, Field } from "formik";
-import {
-  avatarApi,
-  useAddAvatarMutation,
-  useCreateUserMutation,
-} from "@/lib/api/users";
+import { useAddAvatarMutation, useCreateUserMutation } from "@/lib/api/users";
 import Link from "next/link";
 import { IProfile, Role } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
