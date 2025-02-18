@@ -1,11 +1,16 @@
+export enum Role {
+  User = "user",
+  Admin = "admin",
+}
+
 export interface IUser {
   _id?: string;
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: Role;
   avatar: string;
-  profiles: [IProfile];
+  profiles: IProfile[];
 }
 
 export interface IProfile {

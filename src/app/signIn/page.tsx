@@ -6,7 +6,7 @@ export default function SignInPage() {
   return (
     <div
       className="bg-local bg-cover bg-center h-screen w-full"
-      style={{ backgroundImage: `url(/pic/loginBackground.jpg)` }}
+      style={{ backgroundImage: `url(/img/loginBackground.jpg)` }}
     >
       <SignInForm />
     </div>

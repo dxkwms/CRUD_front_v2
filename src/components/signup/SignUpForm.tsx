@@ -1,90 +1,86 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Formik } from "formik";
-import { DATABASE_URL } from "@/api/DATABASE_URL";
-import { useCreateUserMutation } from "@/services/users";
+import { Formik, Form, Field } from "formik";
+import {
+  avatarApi,
+  useAddAvatarMutation,
+  useCreateUserMutation,
+} from "@/lib/api/users";
 import Link from "next/link";
-import type { PutBlobResult } from "@vercel/blob";
-import { onAvatarUpload } from "@/fitch/onAvatarUpload";
-import { IProfile } from "@/types/IUser";
+import { IProfile, Role } from "@/types/IUser";
+import { CommonButton } from "@/components/common/CommonButton";
+import { Typography } from "@/components/common/Typegraohy";
+import { Avatar } from "@/components/common/Avatar";
+import { signUpValidationSchema } from "@/validation/signUpValidationSchema";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [avatarBlob, setAvatarBlob] = useState<PutBlobResult | null>(null);
-  const [isNewUserCreated, setIsNewUserCreated] = useState<boolean>(false);
   const [createUser] = useCreateUserMutation();
+  const [addAvatar] = useAddAvatarMutation();
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
-  const onFormSubmit = async (values: {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    avatar: string;
-    profiles: [IProfile];
-  }) => {
+  const onFormSubmit = async (
+    values: {
+      name: string;
+      email: string;
+      password: string;
+      role: Role;
+      avatar: string;
+      profiles: [IProfile];
+    },
+    { setFieldError }: any,
+  ) => {
     try {
-      if (!avatarBlob) {
-        throw new Error("Avatar is required");
+      if (!avatar) {
+        setFormError("Avatar is required");
+        setFieldError("avatar", "Avatar is required");
+        return;
       }
 
-      values.avatar = avatarBlob.url;
+      const formData = new FormData();
+      formData.append("file", avatar);
+
+      const response = await addAvatar({ formData, avatar }).unwrap();
+
+      if (!response.url) {
+        setFormError("Failed to upload avatar");
+        setFieldError("avatar", "Failed to upload avatar");
+        return;
+      }
+
+      values.avatar = response.url;
 
       await createUser(values).unwrap();
       console.log("User created:", values);
-      setIsNewUserCreated(true);
     } catch (error) {
-      console.log("Error: ", error.message);
+      setFormError("An unexpected error occurred");
+      console.error("Error: ", error.message);
     }
   };
+
   const onAvatarClick = () => {
+    if (inputFileRef.current === null) {
+      return;
+    }
+
     inputFileRef.current.click();
   };
+
   return (
     <Formik
       initialValues={{
         name: "",
         email: "",
         password: "",
-        role: "user",
+        role: Role.User,
         avatar: "",
         profiles: [],
       }}
-      validate={async (values) => {
-        const errors: any = {};
-        if (!values.email) {
-          errors.email = "Required";
-        } else if (
-          !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-        ) {
-          errors.email = "Invalid email address";
-        } else {
-          const response = await fetch(
-            `${DATABASE_URL}/users/email/${values.email}`,
-          );
-          if (response.ok) {
-            const user = await response.json();
-            if (user) {
-              errors.email = "Email already in use";
-            }
-          }
-        }
-
-        if (!values.name) {
-          errors.name = "Required";
-        }
-
-        if (!values.password) {
-          errors.password = "Required";
-        } else if (values.password.length < 6) {
-          errors.password = "Password too short";
-        }
-
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        onFormSubmit(values);
+      validationSchema={signUpValidationSchema}
+      onSubmit={(values, { setSubmitting, setFieldError }) => {
+        onFormSubmit(values, { setFieldError });
         setSubmitting(false);
       }}
     >
@@ -92,124 +88,90 @@ export const SignUpForm = () => {
         values,
         errors,
         touched,
-        handleChange,
-        handleBlur,
         handleSubmit,
         isSubmitting,
         setFieldValue,
       }) => (
         <div className="flex items-center justify-center min-h-screen">
-          {isNewUserCreated && (
-            <div className="absolute bg-black rounded">
-              Success!
-              <button onClick={() => setIsNewUserCreated(false)}>Ok</button>
-            </div>
-          )}
-
           <div className="relative p-8 bg-black rounded-2xl shadow-lg max-w-sm w-full bg-opacity-75">
-            <h2 className="text-2xl font-bold text-white text-center">
+            <Typography variant="h2" className="text-center text-white">
               Sign up
-            </h2>
+            </Typography>
 
-            <div className="flex justify-center mt-6">
-              <div
-                onClick={onAvatarClick}
-                className="cursor-pointer w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden"
-              >
-                <div className="cursor-pointer">
-                  <img
-                    src={
-                      avatar
-                        ? URL.createObjectURL(avatar)
-                        : "https://via.placeholder.com/150"
-                    }
-                    alt="Avatar"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
+            <Avatar avatar={avatar} onAvatarClick={onAvatarClick} />
 
-            <p className="mt-2 text-center text-gray-400">Choose picture</p>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4 ">
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={inputFileRef}
-                  onChange={(e) => {
-                    const file = e.target.files ? e.target.files[0] : null;
-                    if (file) {
-                      onAvatarUpload({ file, setAvatarBlob, setAvatar });
-                    }
-                  }}
-                  className="hidden"
-                />
-              </div>
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                  placeholder={"Email"}
-                  className="w-full px-4 py-2 bg-textWhite text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-                />
-                {errors.email && touched.email && errors.email}
-              </div>
+            <Typography variant="caption" className="mt-2 text-center ">
+              Choose picture
+            </Typography>
+            <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <input
+                type="file"
+                accept="image/*"
+                ref={inputFileRef}
+                onChange={(e) => {
+                  const file = e.target.files ? e.target.files[0] : null;
+                  if (file) {
+                    setAvatar(file);
+                  }
+                }}
+                className="hidden"
+              />
+              {formError && <div className="text-red-500">{formError}</div>}
 
-              <div>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                  className="w-full px-4 py-2 bg-textWhite text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-                  placeholder={"Password"}
-                />
-                {errors.password && touched.password && errors.password}
-              </div>
+              <Field
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="w-full px-4 py-2 bg-textWhite text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
+              />
+              {errors.email && touched.email && <div>{errors.email}</div>}
 
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.name}
-                  className="w-full px-4 py-2 bg-textWhite text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
-                  placeholder={"Nickname"}
-                />
-                {errors.name && touched.name && errors.name}
-              </div>
+              <Field
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="w-full px-4 py-2 bg-textWhite text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
+              />
+              {errors.password && touched.password && (
+                <div>{errors.password}</div>
+              )}
+
+              <Field
+                type="text"
+                name="name"
+                placeholder="Nickname"
+                className="w-full px-4 py-2 bg-textWhite text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700"
+              />
+              {errors.name && touched.name && <div>{errors.name}</div>}
 
               <div className="flex items-center">
-                <input
+                <Field
                   type="checkbox"
+                  name="role"
                   id="admin"
                   className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
                   onChange={(e) => {
-                    setFieldValue("role", e.target.checked ? "admin" : "user");
+                    setFieldValue(
+                      "role",
+                      e.target.checked ? Role.Admin : Role.User,
+                    );
                   }}
-                  checked={values.role === "admin"}
+                  checked={values.role === Role.Admin}
                 />
                 <label htmlFor="admin" className="ml-2 text-gray-400">
                   Admin
                 </label>
               </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-1/3 py-2 bg-buttonColor text-white font-bold rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-700 self-center"
-              >
-                Submit
-              </button>
-            </form>
-            <div className="text-textWhite">
-              <Link href={"/signIn"}>Sign in</Link>
+              <CommonButton buttonText={"Sign up"} isDisabled={isSubmitting} />
+            </Form>
+            <div className="text-textWhite flex items-center justify-center">
+              Have an account?
+              <Link href={"/signIn"}>
+                <Typography variant={"caption"} className="text-buttonColor">
+                  Sign in
+                </Typography>
+              </Link>
             </div>
           </div>
         </div>
