@@ -1,27 +1,27 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { DATABASE_URL } from "@/api/DATABASE_URL";
 import { IUser } from "@/types/IUser";
-import build from "next/dist/build";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `${DATABASE_URL}/users` }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: `${process.env.NEXT_PUBLIC_DATABASE_URL}/`,
+  }),
   endpoints: (builder) => ({
     getUserById: builder.query<IUser, string>({
       query: (id) => `/${id}`,
     }),
 
     getAllUsers: builder.query<IUser, string>({
-      query: () => `/`,
+      query: () => `/users`,
     }),
 
     getUserByEmail: builder.query<IUser, string>({
-      query: (email) => `/email/${email}`,
+      query: (email) => `users/email/${email}`,
     }),
 
     createUser: builder.mutation({
       query: (user: IUser) => ({
-        url: `/`,
+        url: `/signup`,
         method: "POST",
         body: user,
       }),
@@ -29,14 +29,14 @@ export const usersApi = createApi({
 
     deleteUser: builder.mutation({
       query: (id: string) => ({
-        url: `/${id}`,
+        url: `users/${id}`,
         method: "DELETE",
       }),
     }),
 
     addProfile: builder.mutation({
       query: ({ userId, profile }) => ({
-        url: `/${userId}/profiles`,
+        url: `users/${userId}/profiles`,
         method: "POST",
         body: profile,
       }),
@@ -44,7 +44,7 @@ export const usersApi = createApi({
 
     updateProfile: builder.mutation({
       query: ({ userId, profileId, profile }) => ({
-        url: `/${userId}/profiles/${profileId}`,
+        url: `users/${userId}/profiles/${profileId}`,
         method: "PUT",
         body: profile,
       }),
@@ -52,7 +52,7 @@ export const usersApi = createApi({
 
     deleteProfile: builder.mutation({
       query: ({ userId, profileId }) => ({
-        url: `/${userId}/profiles/${profileId}`,
+        url: `users/${userId}/profiles/${profileId}`,
         method: "DELETE",
       }),
     }),
@@ -68,3 +68,19 @@ export const {
   useUpdateProfileMutation,
   useGetAllUsersQuery,
 } = usersApi;
+
+export const avatarApi = createApi({
+  reducerPath: "avatarApi",
+  baseQuery: fetchBaseQuery({ baseUrl: `` }),
+  endpoints: (builder) => ({
+    addAvatar: builder.mutation({
+      query: ({ formData, avatar }) => ({
+        url: `/api/avatar/upload?filename=${avatar.name}`,
+        method: "POST",
+        body: formData,
+      }),
+    }),
+  }),
+});
+
+export const { useAddAvatarMutation } = avatarApi;
