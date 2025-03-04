@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface Props {
   onAvatarClick: () => void;
 
@@ -12,12 +14,14 @@ export const Avatar = ({ onAvatarClick, avatar }: Props) => {
         className="cursor-pointer w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden"
       >
         <div className="cursor-pointer">
-          <img
+          <Image
             src={
               avatar ? URL.createObjectURL(avatar) : "/img/defaultAvatar.png"
             }
             alt="Avatar"
-            className="w-full h-full object-cover"
+            className="object-cover"
+            width={120}
+            height={120}
           />
         </div>
       </div>

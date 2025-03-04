@@ -3,9 +3,9 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CommonButton } from "@/components/common/CommonButton";
-import { useRefreshTokenMutation, useSignInMutation } from "@/lib/api/users";
+import { useRefreshTokenMutation, useSignInMutation } from "@/lib/api/usersApi";
 import { signInValidationSchema } from "@/validation/signInValidationSchema";
-import { Typography } from "@/components/common/Typegraohy";
+import { Typography } from "@/components/common/Typography";
 import { Role } from "@/types/IUser";
 
 export const SignInForm = () => {

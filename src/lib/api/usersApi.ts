@@ -15,10 +15,6 @@ export const usersApi = createApi({
       query: () => `/users`,
     }),
 
-    getUserByEmail: builder.query<IUser, string>({
-      query: (email) => `users/email/${email}`,
-    }),
-
     createUser: builder.mutation({
       query: (user: IUser) => ({
         url: `/signup`,
@@ -61,49 +57,9 @@ export const usersApi = createApi({
 
 export const {
   useGetUserByIdQuery,
-  useGetUserByEmailQuery,
   useCreateUserMutation,
   useAddProfileMutation,
   useDeleteProfileMutation,
   useUpdateProfileMutation,
   useGetAllUsersQuery,
 } = usersApi;
-
-export const avatarApi = createApi({
-  reducerPath: "avatarApi",
-  baseQuery: fetchBaseQuery({ baseUrl: `` }),
-  endpoints: (builder) => ({
-    addAvatar: builder.mutation({
-      query: ({ formData, avatar }) => ({
-        url: `/api/avatar/upload?filename=${avatar.name}`,
-        method: "POST",
-        body: formData,
-      }),
-    }),
-  }),
-});
-
-export const { useAddAvatarMutation } = avatarApi;
-
-export const signInApi = createApi({
-  reducerPath: "tokenApi",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_DATABASE_URL }),
-  endpoints: (builder) => ({
-    refreshToken: builder.mutation({
-      query: (oldToken) => ({
-        url: "/refresh-token",
-        method: "POST",
-        body: { token: oldToken },
-      }),
-    }),
-    signIn: builder.mutation({
-      query: ({ email, password }) => ({
-        url: "/signin",
-        method: "POST",
-        body: { email, password },
-      }),
-    }),
-  }),
-});
-
-export const { useRefreshTokenMutation, useSignInMutation } = signInApi;

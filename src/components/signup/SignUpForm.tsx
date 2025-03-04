@@ -2,36 +2,32 @@
 
 import { useState, useRef } from "react";
 import { Formik, Form, Field } from "formik";
-import { useAddAvatarMutation, useCreateUserMutation } from "@/lib/api/users";
-import Link from "next/link";
-import { IProfile, Role } from "@/types/IUser";
+import {
+  useAddAvatarMutation,
+  useCreateUserMutation,
+} from "@/lib/api/usersApi";
+import { IUser, Role } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
-import { Typography } from "@/components/common/Typegraohy";
+import { Typography } from "@/components/common/Typography";
 import { Avatar } from "@/components/common/Avatar";
 import { signUpValidationSchema } from "@/validation/signUpValidationSchema";
+import { errorsText } from "@/common/errorsText";
+import Link from "next/link";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
+
   const [createUser] = useCreateUserMutation();
   const [addAvatar] = useAddAvatarMutation();
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const [formError, setFormError] = useState<string | null>(null);
 
   const onFormSubmit = async (
-    values: {
-      name: string;
-      email: string;
-      password: string;
-      role: Role;
-      avatar: string;
-      profiles: [IProfile];
-    },
-    { setFieldError }: any,
+    values: IUser,
+    setFieldError: (field: string, message: string | undefined) => void,
   ) => {
     try {
       if (!avatar) {
-        setFormError("Avatar is required");
-        setFieldError("avatar", "Avatar is required");
+        setFieldError("avatar", errorsText.avatarRequired);
         return;
       }
 
@@ -41,23 +37,20 @@ export const SignUpForm = () => {
       const response = await addAvatar({ formData, avatar }).unwrap();
 
       if (!response.url) {
-        setFormError("Failed to upload avatar");
-        setFieldError("avatar", "Failed to upload avatar");
+        setFieldError("avatar", errorsText.avatarUpload);
         return;
       }
 
       values.avatar = response.url;
 
       await createUser(values).unwrap();
-      console.log("User created:", values);
     } catch (error) {
-      setFormError("An unexpected error occurred");
       console.error("Error: ", error.message);
     }
   };
 
   const onAvatarClick = () => {
-    if (inputFileRef.current === null) {
+    if (!inputFileRef.current) {
       return;
     }
 
@@ -76,7 +69,7 @@ export const SignUpForm = () => {
       }}
       validationSchema={signUpValidationSchema}
       onSubmit={(values, { setSubmitting, setFieldError }) => {
-        onFormSubmit(values, { setFieldError });
+        onFormSubmit(values, setFieldError);
         setSubmitting(false);
       }}
     >
@@ -88,7 +81,7 @@ export const SignUpForm = () => {
         isSubmitting,
         setFieldValue,
       }) => (
-        <div className="flex items-center justify-center min-h-screen">
+        <section className="flex items-center justify-center min-h-screen">
           <div className="relative p-8 bg-black rounded-2xl shadow-lg max-w-sm w-full bg-opacity-75">
             <Typography variant="h2" className="text-center text-white">
               Sign up
@@ -105,14 +98,12 @@ export const SignUpForm = () => {
                 accept="image/*"
                 ref={inputFileRef}
                 onChange={(e) => {
-                  const file = e.target.files ? e.target.files[0] : null;
-                  if (file) {
-                    setAvatar(file);
+                  if (e.target.files) {
+                    setAvatar(e.target.files?.[0]);
                   }
                 }}
                 className="hidden"
               />
-              {formError && <div className="text-red-500">{formError}</div>}
 
               <Field
                 type="email"
@@ -170,7 +161,7 @@ export const SignUpForm = () => {
               </Link>
             </div>
           </div>
-        </div>
+        </section>
       )}
     </Formik>
   );
