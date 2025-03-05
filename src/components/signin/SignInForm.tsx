@@ -3,34 +3,33 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CommonButton } from "@/components/common/CommonButton";
-import { useRefreshTokenMutation, useSignInMutation } from "@/lib/api/usersApi";
 import { signInValidationSchema } from "@/validation/signInValidationSchema";
 import { Typography } from "@/components/common/Typography";
 import { Role } from "@/types/IUser";
+import { useSignInMutation } from "@/lib/api/signInApi";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
   const [signIn] = useSignInMutation();
-  const [refreshToken] = useRefreshTokenMutation();
+
   const router = useRouter();
 
   const onLoginSubmit = async (values: { email: string; password: string }) => {
     try {
       const response = await signIn(values).unwrap();
-      const { token, user } = response;
+      const { accessToken, refreshToken, user } = response;
 
-      if (!token) {
+      if (!accessToken) {
         console.error("Login failed:", response.message);
         return;
       }
 
-      localStorage.setItem("token", token);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
 
       if (isRememberMeActive) {
-        await refreshToken(token).unwrap();
+        localStorage.setItem("user", JSON.stringify(user));
       }
-
-      localStorage.setItem("user", JSON.stringify(user));
 
       const userRoleRoute = user.role === Role.Admin ? "/admin/q" : "/user/q";
       router.push(`${userRoleRoute}?id=${user._id}`);

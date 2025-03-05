@@ -8,7 +8,7 @@ export const usersApi = createApi({
   }),
   endpoints: (builder) => ({
     getUserById: builder.query<IUser, string>({
-      query: (id) => `/${id}`,
+      query: (id) => `users/${id}`,
     }),
 
     getAllUsers: builder.query<IUser, string>({
@@ -17,7 +17,7 @@ export const usersApi = createApi({
 
     createUser: builder.mutation({
       query: (user: IUser) => ({
-        url: `/signup`,
+        url: `auth/signup`,
         method: "POST",
         body: user,
       }),

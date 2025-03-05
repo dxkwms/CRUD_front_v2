@@ -2,10 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Formik, Form, Field } from "formik";
-import {
-  useAddAvatarMutation,
-  useCreateUserMutation,
-} from "@/lib/api/usersApi";
+import { useCreateUserMutation } from "@/lib/api/usersApi";
 import { IUser, Role } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
 import { Typography } from "@/components/common/Typography";
@@ -13,6 +10,7 @@ import { Avatar } from "@/components/common/Avatar";
 import { signUpValidationSchema } from "@/validation/signUpValidationSchema";
 import { errorsText } from "@/common/errorsText";
 import Link from "next/link";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
