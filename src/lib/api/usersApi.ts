@@ -11,13 +11,22 @@ export const usersApi = createApi({
       query: (id) => `/${id}`,
     }),
 
+    getUserByToken: builder.query({
+      query: (accessToken) => ({
+        url: "auth/signin",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    }),
+
     getAllUsers: builder.query<IUser, string>({
       query: () => `/users`,
     }),
 
     createUser: builder.mutation({
       query: (user: IUser) => ({
-        url: `/signup`,
+        url: `auth/signup`,
         method: "POST",
         body: user,
       }),
@@ -57,6 +66,7 @@ export const usersApi = createApi({
 
 export const {
   useGetUserByIdQuery,
+  useGetUserByTokenQuery,
   useCreateUserMutation,
   useAddProfileMutation,
   useDeleteProfileMutation,

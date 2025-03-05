@@ -1,36 +1,54 @@
 import { Field, Form, Formik } from "formik";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CommonButton } from "@/components/common/CommonButton";
-import { useRefreshTokenMutation, useSignInMutation } from "@/lib/api/usersApi";
 import { signInValidationSchema } from "@/validation/signInValidationSchema";
 import { Typography } from "@/components/common/Typography";
 import { Role } from "@/types/IUser";
+import { errorsText } from "@/common/errorsText";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/lib/slice/userSlice";
+import { useSignInMutation } from "@/lib/api/signInApi";
+import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
   const [signIn] = useSignInMutation();
-  const [refreshToken] = useRefreshTokenMutation();
+  const dispatch = useDispatch();
   const router = useRouter();
+  const accessToken = localStorage.getItem("token");
 
-  const onLoginSubmit = async (values: { email: string; password: string }) => {
+  const { data: userData, isLoading } = useGetUserByTokenQuery(accessToken, {
+    skip: !accessToken,
+  });
+
+  useEffect(() => {
+    if (userData) {
+      dispatch(setUser(userData));
+      const userRoleRoute =
+        userData.role === Role.Admin ? "/admin/q" : "/user/q";
+      router.push(`${userRoleRoute}?id=${userData._id}`);
+    }
+  }, [userData, dispatch, router]);
+
+  const onLoginSubmit = async (
+    values: { email: string; password: string },
+    setFieldError: (field: string, message: string | undefined) => void,
+  ) => {
     try {
-      const response = await signIn(values).unwrap();
-      const { token, user } = response;
+      const { accessToken, refreshToken, user } = await signIn(values).unwrap();
 
-      if (!token) {
-        console.error("Login failed:", response.message);
+      if (!accessToken) {
+        setFieldError("login", errorsText.loginError);
         return;
       }
 
-      localStorage.setItem("token", token);
+      dispatch(setUser(user));
 
       if (isRememberMeActive) {
-        await refreshToken(token).unwrap();
+        await refreshToken(accessToken).unwrap();
       }
-
-      localStorage.setItem("user", JSON.stringify(user));
 
       const userRoleRoute = user.role === Role.Admin ? "/admin/q" : "/user/q";
       router.push(`${userRoleRoute}?id=${user._id}`);
@@ -38,7 +56,6 @@ export const SignInForm = () => {
       console.error("Login failed:", error);
     }
   };
-
   return (
     <Formik
       initialValues={{
@@ -46,9 +63,9 @@ export const SignInForm = () => {
         password: "",
       }}
       validationSchema={signInValidationSchema}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting, setFieldError }) => {
         setSubmitting(false);
-        onLoginSubmit(values);
+        onLoginSubmit(values, setFieldError);
       }}
     >
       {({

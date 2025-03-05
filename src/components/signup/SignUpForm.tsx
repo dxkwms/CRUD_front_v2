@@ -2,10 +2,8 @@
 
 import { useState, useRef } from "react";
 import { Formik, Form, Field } from "formik";
-import {
-  useAddAvatarMutation,
-  useCreateUserMutation,
-} from "@/lib/api/usersApi";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
+import { useCreateUserMutation } from "@/lib/api/usersApi";
 import { IUser, Role } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
 import { Typography } from "@/components/common/Typography";

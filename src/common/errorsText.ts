@@ -6,4 +6,5 @@ export const errorsText = {
   passwordRequired: "Password is required",
   passwordToShort: "Password too short",
   emailInUse: "Email already in use",
+  loginError: "Login failed.",
 };
