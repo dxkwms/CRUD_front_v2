@@ -14,6 +14,7 @@ import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
+  const [authError, setAuthError] = useState("");
   const [signIn] = useSignInMutation();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -37,7 +38,7 @@ export const SignInForm = () => {
     setFieldError: (field: string, message: string | undefined) => void,
   ) => {
     try {
-      const { accessToken, refreshToken, user } = await signIn(values).unwrap();
+      const { accessToken, user } = await signIn(values).unwrap();
 
       if (!accessToken) {
         setFieldError("login", errorsText.loginError);
@@ -47,15 +48,19 @@ export const SignInForm = () => {
       dispatch(setUser(user));
 
       if (isRememberMeActive) {
-        await refreshToken(accessToken).unwrap();
+        localStorage.setItem("token", accessToken);
       }
 
       const userRoleRoute = user.role === Role.Admin ? "/admin/q" : "/user/q";
       router.push(`${userRoleRoute}?id=${user._id}`);
     } catch (error) {
       console.error("Login failed:", error);
+      setAuthError("Incorrect email or password");
     }
   };
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <Formik
       initialValues={{
@@ -77,12 +82,12 @@ export const SignInForm = () => {
         handleSubmit,
         isSubmitting,
       }) => (
-        <div className="flex items-center justify-center min-h-screen">
+        <section className="flex items-center justify-center min-h-screen">
           <div className="relative p-8 bg-black rounded-2xl shadow-lg max-w-sm w-full bg-opacity-75">
             <Typography variant="h2" className=" text-white text-center">
               Sign In
             </Typography>
-
+            <div className="text-red-500 text-center mt-4">{authError}</div>
             <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <Field
                 type="email"
@@ -123,11 +128,14 @@ export const SignInForm = () => {
               <CommonButton buttonText="Sign in" isDisabled={isSubmitting} />
             </Form>
 
-            <div className="text-textWhite">
-              <Link href="/">Sign up</Link>
+            <div className="text-textWhite text-center mt-3">
+              Don’t have an account?{" "}
+              <Link href="/auth/signup" className="font-bold text-buttonColor">
+                Sign up
+              </Link>
             </div>
           </div>
-        </div>
+        </section>
       )}
     </Formik>
   );

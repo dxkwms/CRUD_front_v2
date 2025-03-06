@@ -13,8 +13,10 @@ export const usersApi = createApi({
 
     getUserByToken: builder.query({
       query: (accessToken) => ({
-        url: "auth/signin",
+        url: "auth/user",
+        method: "GET",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       }),

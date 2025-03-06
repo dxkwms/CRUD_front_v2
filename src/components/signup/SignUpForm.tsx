@@ -150,12 +150,13 @@ export const SignUpForm = () => {
 
               <CommonButton buttonText={"Sign up"} isDisabled={isSubmitting} />
             </Form>
-            <div className="text-textWhite flex items-center justify-center">
-              Have an account?
-              <Link href={"/signIn"}>
-                <Typography variant={"caption"} className="text-buttonColor">
-                  Sign in
-                </Typography>
+            <div className="text-textWhite text-center mt-3">
+              Have an account?{" "}
+              <Link
+                href={"/auth/signIn"}
+                className="font-bold text-buttonColor"
+              >
+                Sign in
               </Link>
             </div>
           </div>

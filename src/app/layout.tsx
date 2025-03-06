@@ -4,6 +4,7 @@ import "@/reset.css";
 import "@/globals.css";
 import { Provider } from "react-redux";
 import { store } from "@/lib/store/store";
+import { PrivateProvider } from "@/components/PrivateProvider/PrivateProvider";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` ${openSans.variable} antialiased`}>
-        <Provider store={store}>{children}</Provider>
+        <Provider store={store}>
+          <PrivateProvider>{children}</PrivateProvider>
+        </Provider>
       </body>
     </html>
   );
