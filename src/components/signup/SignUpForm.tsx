@@ -45,7 +45,7 @@ export const SignUpForm = () => {
 
       await createUser(values).unwrap();
     } catch (error) {
-      console.error("Error: ", error.message);
+      console.error("Error: ", (error as Error).message);
       setSignupError(errorsText.createUserFailedError);
     }
   };
@@ -90,9 +90,6 @@ export const SignUpForm = () => {
 
             <Avatar avatar={avatar} onAvatarClick={onAvatarClick} />
 
-            <Typography variant="caption" className="mt-2 text-center ">
-              Choose picture
-            </Typography>
             <ErrorComponent errorValue={signupError} />
             <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <input
@@ -139,7 +136,7 @@ export const SignUpForm = () => {
                   name="role"
                   id="admin"
                   className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFieldValue(
                       "role",
                       e.target.checked ? Role.Admin : Role.User,

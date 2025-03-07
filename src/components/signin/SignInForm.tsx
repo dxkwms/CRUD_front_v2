@@ -37,7 +37,7 @@ export const SignInForm = () => {
 
   const onLoginSubmit = async (
     values: { email: string; password: string },
-    setFieldError: (field: string, message: string | undefined) => void,
+    setFieldError: (field: string, message?: string) => void,
   ) => {
     try {
       const { accessToken, user } = await signIn(values).unwrap();
@@ -53,8 +53,9 @@ export const SignInForm = () => {
         localStorage.setItem("token", accessToken);
       }
 
-      const userRoleRoute = user.role === Role.Admin ? "/admin/q" : "/user/q";
+      const userRoleRoute = user.role === Role.Admin ? "/admin/d" : "/user/q";
       router.push(`${userRoleRoute}?id=${user._id}`);
+      //todo url user/:id https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes
     } catch (error) {
       console.error("Login failed:", error);
       setAuthError("Incorrect email or password");
@@ -119,7 +120,7 @@ export const SignInForm = () => {
                 type="checkbox"
                 id="remember_me"
                 className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setIsRememberMeActive(e.target.checked);
                 }}
                 checked={isRememberMeActive}
