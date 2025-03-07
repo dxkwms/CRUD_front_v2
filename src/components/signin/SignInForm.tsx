@@ -9,7 +9,7 @@ import { Role } from "@/types/IUser";
 import { errorsText } from "@/common/errorsText";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/lib/slice/userSlice";
-import { useSignInMutation } from "@/lib/api/signInApi";
+import { useSignInMutation } from "@/lib/api/signinApi";
 import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 import { ROUTES } from "@/types/routesEnum";
 import { ErrorComponent } from "@/components/error/ErrorComponent";

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const signInApi = createApi({
+export const signinApi = createApi({
   reducerPath: "tokenApi",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_DATABASE_URL }),
   endpoints: (builder) => ({
@@ -21,4 +21,4 @@ export const signInApi = createApi({
   }),
 });
 
-export const { useRefreshTokenMutation, useSignInMutation } = signInApi;
+export const { useRefreshTokenMutation, useSignInMutation } = signinApi;

@@ -9,17 +9,17 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const pathname = usePathname();
 
-  useEffect(() => {
-    if (!isAuth) {
-      if (pathname !== ROUTES.SIGN_IN && pathname !== ROUTES.SIGN_UP) {
-        router.push(ROUTES.SIGN_IN);
-      }
-    } else {
-      if (pathname === ROUTES.SIGN_IN || pathname === ROUTES.SIGN_UP) {
-        router.push("/profile");
-      }
-    }
-  }, [isAuth, pathname, router]);
+  // useEffect(() => {
+  //   if (!isAuth) {
+  //     if (pathname !== ROUTES.SIGN_IN && pathname !== ROUTES.SIGN_UP) {
+  //       router.push(ROUTES.SIGN_IN);
+  //     }
+  //   } else {
+  //     if (pathname === ROUTES.SIGN_IN || pathname === ROUTES.SIGN_UP) {
+  //       router.push("/profile");
+  //     }
+  //   }
+  // }, [isAuth, pathname, router]);
 
   if (!isAuth) return null;
 
