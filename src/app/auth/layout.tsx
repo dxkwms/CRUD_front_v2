@@ -1,12 +1,12 @@
-import { SignUpForm } from "@/components/signup/SignUpForm";
+import { PropsWithChildren } from "react";
 
-export default function Home() {
+export default function AuthLayout({ children }: PropsWithChildren) {
   return (
     <div
       className="bg-local bg-cover bg-center h-screen w-full"
       style={{ backgroundImage: `url(/img/loginBackground.jpg)` }}
     >
-      <SignUpForm />;
+      {children}
     </div>
   );
 }

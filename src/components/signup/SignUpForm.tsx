@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Formik, Form, Field } from "formik";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 import { useCreateUserMutation } from "@/lib/api/usersApi";
 import { IUser, Role } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
@@ -10,18 +11,19 @@ import { Avatar } from "@/components/common/Avatar";
 import { signUpValidationSchema } from "@/validation/signUpValidationSchema";
 import { errorsText } from "@/common/errorsText";
 import Link from "next/link";
-import { useAddAvatarMutation } from "@/lib/api/avatarApi";
+import { ROUTES } from "@/types/routesEnum";
+import { ErrorComponent } from "@/components/error/ErrorComponent";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
-
+  const [signupError, setSignupError] = useState("");
   const [createUser] = useCreateUserMutation();
   const [addAvatar] = useAddAvatarMutation();
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const onFormSubmit = async (
     values: IUser,
-    setFieldError: (field: string, message: string | undefined) => void,
+    setFieldError: (field: string, message?: string) => void,
   ) => {
     try {
       if (!avatar) {
@@ -43,7 +45,8 @@ export const SignUpForm = () => {
 
       await createUser(values).unwrap();
     } catch (error) {
-      console.error("Error: ", error.message);
+      console.error("Error: ", (error as Error).message);
+      setSignupError(errorsText.createUserFailedError);
     }
   };
 
@@ -87,9 +90,7 @@ export const SignUpForm = () => {
 
             <Avatar avatar={avatar} onAvatarClick={onAvatarClick} />
 
-            <Typography variant="caption" className="mt-2 text-center ">
-              Choose picture
-            </Typography>
+            <ErrorComponent errorValue={signupError} />
             <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <input
                 type="file"
@@ -135,7 +136,7 @@ export const SignUpForm = () => {
                   name="role"
                   id="admin"
                   className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
-                  onChange={(e) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFieldValue(
                       "role",
                       e.target.checked ? Role.Admin : Role.User,
@@ -148,14 +149,15 @@ export const SignUpForm = () => {
                 </label>
               </div>
 
-              <CommonButton buttonText={"Sign up"} isDisabled={isSubmitting} />
+              <CommonButton disabled={isSubmitting}>Sign up</CommonButton>
             </Form>
-            <div className="text-textWhite flex items-center justify-center">
-              Have an account?
-              <Link href={"/signIn"}>
-                <Typography variant={"caption"} className="text-buttonColor">
-                  Sign in
-                </Typography>
+            <div className="text-textWhite text-center mt-3">
+              Have an account?{" "}
+              <Link
+                href={ROUTES.SIGN_IN}
+                className="font-bold text-buttonColor"
+              >
+                Sign in
               </Link>
             </div>
           </div>

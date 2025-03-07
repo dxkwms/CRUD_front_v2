@@ -5,10 +5,10 @@ export const avatarApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: `` }),
   endpoints: (builder) => ({
     addAvatar: builder.mutation({
-      query: ({ avatar }) => ({
+      query: ({ formData, avatar }) => ({
         url: `/api/avatar/upload?filename=${avatar.name}`,
         method: "POST",
-        body: avatar,
+        body: formData,
       }),
     }),
   }),

@@ -8,7 +8,18 @@ export const usersApi = createApi({
   }),
   endpoints: (builder) => ({
     getUserById: builder.query<IUser, string>({
-      query: (id) => `users/${id}`,
+      query: (id) => `/${id}`,
+    }),
+
+    getUserByToken: builder.query({
+      query: (accessToken) => ({
+        url: "auth/user",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
     }),
 
     getAllUsers: builder.query<IUser, string>({
@@ -57,6 +68,7 @@ export const usersApi = createApi({
 
 export const {
   useGetUserByIdQuery,
+  useGetUserByTokenQuery,
   useCreateUserMutation,
   useAddProfileMutation,
   useDeleteProfileMutation,
