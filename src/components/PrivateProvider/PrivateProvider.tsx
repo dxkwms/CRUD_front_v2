@@ -1,23 +1,21 @@
-import { useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "@/types/RootState";
+import { ROUTES } from "@/types/routesEnum";
 
-export const PrivateProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const PrivateProvider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const pathname = usePathname();
+
   useEffect(() => {
     if (!isAuth) {
-      if (pathname !== "auth/signin" && pathname !== "auth/signup") {
-        router.push("auth/signin");
+      if (pathname !== ROUTES.SIGN_IN && pathname !== ROUTES.SIGN_UP) {
+        router.push(ROUTES.SIGN_IN);
       }
     } else {
-      if (pathname === "auth/signin" || pathname === "auth/signup") {
+      if (pathname === ROUTES.SIGN_IN || pathname === ROUTES.SIGN_UP) {
         router.push("/profile");
       }
     }

@@ -11,17 +11,19 @@ import { Avatar } from "@/components/common/Avatar";
 import { signUpValidationSchema } from "@/validation/signUpValidationSchema";
 import { errorsText } from "@/common/errorsText";
 import Link from "next/link";
+import { ROUTES } from "@/types/routesEnum";
+import { ErrorComponent } from "@/components/error/ErrorComponent";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
-
+  const [signupError, setSignupError] = useState("");
   const [createUser] = useCreateUserMutation();
   const [addAvatar] = useAddAvatarMutation();
   const inputFileRef = useRef<HTMLInputElement>(null);
 
   const onFormSubmit = async (
     values: IUser,
-    setFieldError: (field: string, message: string | undefined) => void,
+    setFieldError: (field: string, message?: string) => void,
   ) => {
     try {
       if (!avatar) {
@@ -44,6 +46,7 @@ export const SignUpForm = () => {
       await createUser(values).unwrap();
     } catch (error) {
       console.error("Error: ", error.message);
+      setSignupError(errorsText.createUserFailedError);
     }
   };
 
@@ -90,6 +93,7 @@ export const SignUpForm = () => {
             <Typography variant="caption" className="mt-2 text-center ">
               Choose picture
             </Typography>
+            <ErrorComponent errorValue={signupError} />
             <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <input
                 type="file"
@@ -148,12 +152,12 @@ export const SignUpForm = () => {
                 </label>
               </div>
 
-              <CommonButton buttonText={"Sign up"} isDisabled={isSubmitting} />
+              <CommonButton disabled={isSubmitting}>Sign up</CommonButton>
             </Form>
             <div className="text-textWhite text-center mt-3">
               Have an account?{" "}
               <Link
-                href={"/auth/signIn"}
+                href={ROUTES.SIGN_IN}
                 className="font-bold text-buttonColor"
               >
                 Sign in

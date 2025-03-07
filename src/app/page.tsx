@@ -1,5 +1,12 @@
-import {SignUp} from "@/components/signup/SignUp";
+import { SignUpForm } from "@/components/signup/SignUpForm";
 
 export default function Home() {
-  return <SignUp />;
+  return (
+    <div
+      className="bg-local bg-cover bg-center h-screen w-full"
+      style={{ backgroundImage: `url(/img/loginBackground.jpg)` }}
+    >
+      <SignUpForm />;
+    </div>
+  );
 }

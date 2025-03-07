@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/lib/slice/userSlice";
 import { useSignInMutation } from "@/lib/api/signInApi";
 import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
+import { ROUTES } from "@/types/routesEnum";
+import { ErrorComponent } from "@/components/error/ErrorComponent";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
@@ -87,7 +89,7 @@ export const SignInForm = () => {
             <Typography variant="h2" className=" text-white text-center">
               Sign In
             </Typography>
-            <div className="text-red-500 text-center mt-4">{authError}</div>
+            <ErrorComponent errorValue={authError} />
             <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
               <Field
                 type="email"
@@ -125,12 +127,15 @@ export const SignInForm = () => {
               <label htmlFor="remember_me" className="ml-2 text-gray-400">
                 Remember me
               </label>
-              <CommonButton buttonText="Sign in" isDisabled={isSubmitting} />
+              <CommonButton disabled={isSubmitting}>Sign in</CommonButton>
             </Form>
 
             <div className="text-textWhite text-center mt-3">
               Don’t have an account?{" "}
-              <Link href="/auth/signup" className="font-bold text-buttonColor">
+              <Link
+                href={ROUTES.SIGN_UP}
+                className="font-bold text-buttonColor"
+              >
                 Sign up
               </Link>
             </div>
