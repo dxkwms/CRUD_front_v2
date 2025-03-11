@@ -19,7 +19,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className={` ${openSans.variable} antialiased`}>
         <Provider store={store}>
-          <>{children}</>
+          <PrivateProvider>{children}</PrivateProvider>
         </Provider>
       </body>
     </html>

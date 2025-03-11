@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 import { LogoutButton } from "@/components/sidebar/LogoutButton";
 
 interface IProps {
-  avatar: string;
-  name: string;
+  avatar: string | undefined;
+  name: string | undefined;
   isProfileActive: boolean;
   setIsProfileActive: Dispatch<SetStateAction<boolean>>;
 }
@@ -19,11 +19,11 @@ export const Sidebar = ({
   return (
     <div
       className={
-        "bg-formBackground h-screen w-1/5 flex flex-col justify-between items-center"
+        "bg-formBackground h-screen w-1/5 flex flex-col justify-between"
       }
     >
       <div className="w-full">
-        <div className={"flex flex-col items-center mt-16"}>
+        <div className={"flex flex-col items-center mt-5"}>
           <Image
             src={`${avatar}`}
             alt={"avatar"}
@@ -37,7 +37,7 @@ export const Sidebar = ({
           onClick={() => {
             setIsProfileActive((prevState) => !prevState);
           }}
-          className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-${isProfileActive ? "gray-800" : "textWhite"} rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700`}
+          className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-${isProfileActive ? "gray-800" : "textWhite"} cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700`}
         >
           fwq
         </div>

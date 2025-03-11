@@ -1,8 +1,9 @@
 "use client";
-import { useGetUserByIdQuery } from "@/lib/api/usersApi";
+
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Sidebar } from "@/components/sidebar/Sidebar";
+import { RootState } from "@/types/RootState";
+import { useSelector } from "react-redux";
 
 export default function ProfileLayout({
   children,
@@ -10,11 +11,7 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   const [isProfileActive, setIsProfileActive] = useState(false);
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
-  const { data, error, isLoading } = useGetUserByIdQuery(id);
-  if (isLoading) return <div>Loading</div>;
+  const userData = useSelector((state: RootState) => state.user.user);
 
   return (
     <div
@@ -22,8 +19,8 @@ export default function ProfileLayout({
       style={{ backgroundImage: `url(/img/profileBackground.png)` }}
     >
       <Sidebar
-        avatar={data.avatar}
-        name={data.name}
+        avatar={userData?.avatar}
+        name={userData?.name}
         setIsProfileActive={setIsProfileActive}
         isProfileActive={isProfileActive}
       />

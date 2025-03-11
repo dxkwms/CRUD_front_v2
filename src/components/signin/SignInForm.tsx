@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { CommonButton } from "@/components/common/CommonButton";
 import { signInValidationSchema } from "@/validation/signInValidationSchema";
 import { Typography } from "@/components/common/Typography";
-import { Role } from "@/types/IUser";
 import { errorsText } from "@/common/errorsText";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/lib/slice/userSlice";
@@ -29,9 +28,7 @@ export const SignInForm = () => {
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData));
-      const userRoleRoute =
-        userData.role === Role.Admin ? "/admin/q" : "/user/q";
-      router.push(`${userRoleRoute}?id=${userData._id}`);
+      router.push(`/${userData.role}/${userData._id}`);
     }
   }, [userData, dispatch, router]);
 
@@ -53,8 +50,7 @@ export const SignInForm = () => {
         localStorage.setItem("token", accessToken);
       }
 
-      const userRoleRoute = user.role === Role.Admin ? "/admin/d" : "/user/q";
-      router.push(`${userRoleRoute}?id=${user._id}`);
+      router.push(`/${user.role}/${user._id}`);
       //todo url user/:id https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes
     } catch (error) {
       console.error("Login failed:", error);
