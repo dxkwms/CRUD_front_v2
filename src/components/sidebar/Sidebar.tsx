@@ -37,9 +37,9 @@ export const Sidebar = ({
           onClick={() => {
             setIsProfileActive((prevState) => !prevState);
           }}
-          className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-${isProfileActive ? "gray-800" : "textWhite"} cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700`}
+          className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-${isProfileActive ? "gray-800" : "textWhite"} cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700 mt-2`}
         >
-          fwq
+          Profile
         </div>
       </div>
       <LogoutButton />

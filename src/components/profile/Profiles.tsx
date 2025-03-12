@@ -7,6 +7,7 @@ import { ProfileForm } from "@/components/profile/ProfileForm";
 import { calculateAge } from "@/fitch/calculateAge";
 import { useSelector } from "react-redux";
 import { RootState } from "@/types/RootState";
+import Image from "next/image";
 
 export const Profiles = () => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -142,9 +143,12 @@ export const Profiles = () => {
           onClick={() =>
             setIsCreateNewProfileFormVisible((prevState) => !prevState)
           }
-          className={"cursor-pointer border-amber-50 border-2 flex-wrap "}
+          className={
+            "cursor-pointer border-amber-50 border-2 w-56 h-64 bg-formBackground flex flex-col items-center justify-center self-center rounded-2xl opacity-90 text-textWhite"
+          }
         >
-          Add new profile
+          <Image src={"/img/profileIcon.svg"} alt={""} width={84} height={84} />
+          Create new profile
         </div>
       </div>
     </div>
