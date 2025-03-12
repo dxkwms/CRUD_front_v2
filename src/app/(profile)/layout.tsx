@@ -10,7 +10,7 @@ export default function ProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isProfileActive, setIsProfileActive] = useState(false);
+  const [isProfileActive, setIsProfileActive] = useState(true);
   const userData = useSelector((state: RootState) => state.user.user);
 
   return (
