@@ -51,7 +51,6 @@ export const SignInForm = () => {
       }
 
       router.push(`/${user.role}/${user._id}`);
-      //todo url user/:id https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes
     } catch (error) {
       console.error("Login failed:", error);
       setAuthError("Incorrect email or password");

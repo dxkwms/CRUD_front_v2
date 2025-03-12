@@ -42,24 +42,24 @@ export const usersApi = createApi({
     }),
 
     addProfile: builder.mutation({
-      query: ({ userId, profile }) => ({
-        url: `users/${userId}/profiles`,
+      query: ({ userToken, profile }) => ({
+        url: `users/${userToken}/profiles`,
         method: "POST",
         body: profile,
       }),
     }),
 
     updateProfile: builder.mutation({
-      query: ({ userId, profileId, profile }) => ({
-        url: `users/${userId}/profiles/${profileId}`,
+      query: ({ userToken, profileId, profile }) => ({
+        url: `users/${userToken}/profiles/${profileId}`,
         method: "PUT",
         body: profile,
       }),
     }),
 
     deleteProfile: builder.mutation({
-      query: ({ userId, profileId }) => ({
-        url: `users/${userId}/profiles/${profileId}`,
+      query: ({ userToken, profileId }) => ({
+        url: `users/${userToken}/profiles/${profileId}`,
         method: "DELETE",
       }),
     }),

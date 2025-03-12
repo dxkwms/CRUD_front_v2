@@ -11,6 +11,7 @@ export interface IUser {
   role: Role;
   avatar: string;
   profiles: IProfile[];
+  accessToken?: string;
 }
 
 export interface IProfile {
