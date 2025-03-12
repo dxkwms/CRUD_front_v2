@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 import { LogoutButton } from "@/components/sidebar/LogoutButton";
+import { Typography } from "@/components/common/Typography";
 
 interface IProps {
-  avatar: string | undefined;
-  name: string | undefined;
+  avatar?: string;
+  name?: string;
   isProfileActive: boolean;
   setIsProfileActive: Dispatch<SetStateAction<boolean>>;
 }
@@ -15,7 +16,6 @@ export const Sidebar = ({
   setIsProfileActive,
   isProfileActive,
 }: IProps) => {
-  console.log(avatar);
   return (
     <div
       className={
@@ -37,9 +37,18 @@ export const Sidebar = ({
           onClick={() => {
             setIsProfileActive((prevState) => !prevState);
           }}
-          className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-${isProfileActive ? "gray-800" : "textWhite"} cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700 mt-2`}
+          className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-textWhite cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700 flex h-20 text-center items-center mt-5`}
         >
-          Profile
+          <Image
+            src={"/img/sidebarProfileIcon.svg"}
+            alt={""}
+            width={30}
+            height={29}
+            className={"mr-4"}
+          />
+          <Typography variant={"h3"} className={"text-textWhite"}>
+            Profile
+          </Typography>
         </div>
       </div>
       <LogoutButton />
