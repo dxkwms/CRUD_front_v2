@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 import { LogoutButton } from "@/components/sidebar/LogoutButton";
 
 interface IProps {
-  avatar: string | undefined;
-  name: string | undefined;
+  avatar?: string;
+  name?: string;
   isProfileActive: boolean;
   setIsProfileActive: Dispatch<SetStateAction<boolean>>;
 }
@@ -15,7 +15,6 @@ export const Sidebar = ({
   setIsProfileActive,
   isProfileActive,
 }: IProps) => {
-  console.log(avatar);
   return (
     <div
       className={
@@ -39,7 +38,7 @@ export const Sidebar = ({
           }}
           className={`w-full px-4 py-2 bg-${isProfileActive ? "buttonColor" : "none"} text-${isProfileActive ? "gray-800" : "textWhite"} cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-700`}
         >
-          fwq
+          Profile
         </div>
       </div>
       <LogoutButton />
