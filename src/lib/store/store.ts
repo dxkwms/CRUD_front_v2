@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { usersApi } from "@/lib/api/usersApi";
-import { signInApi } from "@/lib/api/signInApi";
+import { signinApi } from "@/lib/api/signinApi";
 import { avatarApi } from "@/lib/api/avatarApi";
 import { userSlice } from "@/lib/slice/userSlice";
 import { authSlice } from "@/lib/slice/authSlice";
@@ -10,7 +10,7 @@ export const store = configureStore({
   reducer: {
     [usersApi.reducerPath]: usersApi.reducer,
     [avatarApi.reducerPath]: avatarApi.reducer,
-    [signInApi.reducerPath]: signInApi.reducer,
+    [signinApi.reducerPath]: signinApi.reducer,
     user: userSlice.reducer,
     auth: authSlice.reducer,
   },
@@ -19,7 +19,7 @@ export const store = configureStore({
     getDefaultMiddleware()
       .concat(usersApi.middleware)
       .concat(avatarApi.middleware)
-      .concat(signInApi.middleware),
+      .concat(signinApi.middleware),
 });
 
 setupListeners(store.dispatch);

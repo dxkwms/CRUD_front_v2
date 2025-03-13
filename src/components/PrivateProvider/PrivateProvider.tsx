@@ -1,27 +1,30 @@
 import { PropsWithChildren, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/types/RootState";
 import { ROUTES } from "@/types/routesEnum";
+import { setUser } from "@/lib/slice/userSlice";
+import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 
 export const PrivateProvider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
-  const pathname = usePathname();
+  const dispatch = useDispatch();
+
+  const accessToken = localStorage.getItem("token");
+  const { data: userData, isLoading } = useGetUserByTokenQuery(accessToken, {
+    skip: !accessToken,
+  });
 
   useEffect(() => {
-    if (!isAuth) {
-      if (pathname !== ROUTES.SIGN_IN && pathname !== ROUTES.SIGN_UP) {
-        router.push(ROUTES.SIGN_IN);
-      }
+    if (isAuth && userData) {
+      dispatch(setUser(userData));
     } else {
-      if (pathname === ROUTES.SIGN_IN || pathname === ROUTES.SIGN_UP) {
-        router.push("/profile");
-      }
+      router.push(`${ROUTES.SIGN_IN}`);
     }
-  }, [isAuth, pathname, router]);
+  }, [dispatch, isAuth, router, userData]);
 
-  if (!isAuth) return null;
+  if (isLoading) return <div>Loading...</div>;
 
   return <>{children}</>;
 };

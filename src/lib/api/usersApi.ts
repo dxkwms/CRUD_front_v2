@@ -8,7 +8,7 @@ export const usersApi = createApi({
   }),
   endpoints: (builder) => ({
     getUserById: builder.query<IUser, string>({
-      query: (id) => `/${id}`,
+      query: (id) => `users/${id}`,
     }),
 
     getUserByToken: builder.query({

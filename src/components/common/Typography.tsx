@@ -20,7 +20,7 @@ export const Typography = ({
   className = "",
   children,
 }: TypographyProps) => {
-  const baseStyles = "font-sans text-gray-800";
+  const baseStyles = "font-sans";
 
   const variantStyles: Record<string, string> = {
     h1: "text-4xl font-bold",
