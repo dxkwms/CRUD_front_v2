@@ -50,7 +50,7 @@ export const SignInForm = () => {
         localStorage.setItem("token", accessToken);
       }
 
-      router.push(`/${user.role}/${user._id}`);
+      router.push(`/${user.role}/${user._id}/profiles`);
     } catch (error) {
       console.error("Login failed:", error);
       setAuthError("Incorrect email or password");
