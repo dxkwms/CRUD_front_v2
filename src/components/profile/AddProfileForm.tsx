@@ -1,12 +1,15 @@
 import { Field, Formik } from "formik";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
-import { profileValidationSchema } from "@/validation/profileValidationSchema";
 import { Avatar } from "@/components/common/Avatar";
 import { useAddProfileMutation } from "@/lib/api/usersApi";
 import { IProfile } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
+import { ProfileField } from "@/components/common/ProfileField";
+import { errorsText } from "@/common/errorsText";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 
 interface Props {
+  formName: string;
   userToken: string | undefined;
   setIsCreateNewProfileFormVisible: Dispatch<SetStateAction<boolean>>;
 }
@@ -14,15 +17,28 @@ interface Props {
 export const AddProfileForm = ({
   setIsCreateNewProfileFormVisible,
   userToken,
+  formName,
 }: Props) => {
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [addProfile] = useAddProfileMutation();
+  const [addAvatar] = useAddAvatarMutation();
+
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const [addProfile] = useAddProfileMutation();
-
-  const onAddProfile = async (values: IProfile) => {
+  const onAddProfile = async (
+    values: IProfile,
+    setFieldError: (field: string, message?: string) => void,
+  ) => {
     if (!userToken) return;
     try {
+      const response = await addAvatar({ values, avatar }).unwrap();
+
+      if (!response.url) {
+        setFieldError("avatar", errorsText.avatarUpload);
+        return;
+      }
+
+      values.avatar = response.url;
       await addProfile({ userToken, profile: values }).unwrap();
       alert("Profile added successfully!");
     } catch (error) {
@@ -53,7 +69,10 @@ export const AddProfileForm = ({
         avatar: "",
         gender: "",
       }}
-      onSubmit={onAddProfile}
+      onSubmit={(values, { setSubmitting, setFieldError }) => {
+        onAddProfile(values, setFieldError);
+        setSubmitting(false);
+      }}
     >
       {({ values, handleChange, handleSubmit, setFieldValue }) => (
         <form
@@ -61,9 +80,7 @@ export const AddProfileForm = ({
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 flex-col z-10"
         >
           <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg h-5/6">
-            <h2 className="text-center text-xl font-semibold">
-              Add new profile
-            </h2>
+            <h2 className="text-center text-xl font-semibold">{formName}</h2>
             <input
               type="file"
               accept="image/*"
@@ -76,43 +93,43 @@ export const AddProfileForm = ({
               className="hidden"
             />
             <Avatar onAvatarClick={onAvatarClick} avatar={avatar} />
-            <Field
+            <ProfileField
               type="text"
               name="name"
               placeholder="Name"
               value={values.name}
               onChange={handleChange}
             />
-            <Field
+            <ProfileField
               type="number"
               name="phoneNumber"
               placeholder="Phone Number"
               value={values.phoneNumber}
               onChange={handleChange}
             />
-            <Field
+            <ProfileField
               type="text"
               name="location"
               placeholder="Location"
               value={values.location}
               onChange={handleChange}
             />
-            <Field
+            <ProfileField
               type="text"
               name="country"
               placeholder="Country"
               value={values.country}
               onChange={handleChange}
             />
-            <Field
+            <ProfileField
               type="date"
               name="birthdate"
               placeholder="Birthdate"
               value={values.birthdate}
               onChange={handleChange}
             />
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
+            <div className="flex justify-center items-center mt-2">
+              <div className="flex items-center mr-5">
                 <input
                   type="radio"
                   id="male"
@@ -134,7 +151,7 @@ export const AddProfileForm = ({
                   Male
                 </span>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center ml-5">
                 <input
                   type="radio"
                   id="female"
@@ -158,7 +175,7 @@ export const AddProfileForm = ({
               </div>
             </div>
 
-            <div className={"flex justify-between"}>
+            <div className={"flex justify-between mt-2"}>
               <CommonButton>Save</CommonButton>
               <CommonButton clickedFn={onFormClose}>Close</CommonButton>
             </div>

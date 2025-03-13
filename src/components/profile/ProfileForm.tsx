@@ -24,13 +24,13 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
   return (
     <div
       key={profile._id}
-      className="mr-10 relative rounded-3xl border p-1 bg-formBackground text-textWhite"
+      className="mr-10 relative rounded-3xl border p-1 bg-formBackground text-textWhite w-56 opacity-95 shadow-[1px_4px_6px_0px_rgba(0,_0,_0,_0.1)]"
       onMouseEnter={() => setIsHover(profile._id)}
       onMouseLeave={() => setIsHover(null)}
     >
       <div className={"flex items-center "}>
         <Image
-          src={`${profile.avatar && profile.avatar}`}
+          src={`${profile.avatar}`}
           alt={"avatar"}
           className={"rounded-full object-cover"}
           width={64}
@@ -38,37 +38,47 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
         />
         <h3>{profile.name}</h3>
       </div>
+      <hr className="border-t-2 border-[#F2EDE721]" />
+      <div className="space-y-2">
+        <div className="flex ">
+          <span className="text-buttonColor">Phone: </span>
+          <span>{profile.phoneNumber}</span>
+        </div>
 
-      <p>
-        <span className="text-buttonColor">Phone: </span> {profile.phoneNumber}
-      </p>
-      <p>
-        <span className="text-buttonColor">Location: </span> {profile.location}
-      </p>
-      <p>
-        <span className="text-buttonColor">Country: </span> {profile.country}
-      </p>
-      <p>
-        <span className="text-buttonColor">Birthdate: </span>{" "}
-        {profile.birthdate}
-      </p>
-      <p>
-        <span className="text-buttonColor">Gender: </span> {profile.gender}
-      </p>
+        <div className="flex ">
+          <span className="text-buttonColor">Location: </span>
+          <span>{profile.location}</span>
+        </div>
+
+        <div className="flex ">
+          <span className="text-buttonColor">Country: </span>
+          <span>{profile.country}</span>
+        </div>
+
+        <div className="flex ">
+          <span className="text-buttonColor">Birthdate: </span>
+          <span>{profile.birthdate}</span>
+        </div>
+
+        <div className="flex ">
+          <span className="text-buttonColor">Gender: </span>
+          <span>{profile.gender}</span>
+        </div>
+      </div>
 
       {isHover === profile._id && (
         <div className="absolute top-0 bottom-0 left-0 w-full flex justify-between border rounded-3xl ">
           <button
             onClick={() => onProfileEdit(profile)}
-            className="bg-editButtonColor text-formBackground p-2 rounded-l-3xl hover:bg-textWhite transition"
+            className="bg-editButtonColor text-formBackground p-2 rounded-l-3xl hover:bg-textWhite transition w-1/2"
           >
-            Edit Profile
+            Edit
           </button>
           <button
             onClick={() => onProfileDelete(profile._id)}
-            className="bg-buttonColor text-formBackground p-2 rounded-r-3xl hover:bg-textWhite transition"
+            className="bg-buttonColor text-formBackground  p-2 rounded-r-3xl hover:bg-textWhite transition w-1/2"
           >
-            Delete Profile
+            Delete
           </button>
         </div>
       )}

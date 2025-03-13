@@ -5,7 +5,8 @@ import { IProfile } from "@/types/IUser";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useUpdateProfileMutation } from "@/lib/api/usersApi";
 import { Avatar } from "@/components/common/Avatar";
-import { profileValidationSchema } from "@/validation/profileValidationSchema";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
+import { errorsText } from "@/common/errorsText";
 
 interface Props {
   currentProfile: IProfile | null;
@@ -21,12 +22,24 @@ export const EditProfileForm = ({
   userToken,
 }: Props) => {
   const [avatar, setAvatar] = useState<File | null>(null);
-
-  const [updateProfile] = useUpdateProfileMutation();
   const inputFileRef = useRef<HTMLInputElement>(null);
 
-  const onUpdateProfile = async (values) => {
+  const [updateProfile] = useUpdateProfileMutation();
+  const [addAvatar] = useAddAvatarMutation();
+
+  const onUpdateProfile = async (
+    values,
+    setFieldError: (field: string, message?: string) => void,
+  ) => {
     try {
+      const response = await addAvatar({ values, avatar }).unwrap();
+
+      if (!response.url) {
+        setFieldError("avatar", errorsText.avatarUpload);
+        return;
+      }
+
+      values.avatar = response.url;
       await updateProfile({
         userToken,
         profileId: currentProfile?._id,
@@ -58,8 +71,10 @@ export const EditProfileForm = ({
         avatar: currentProfile?.avatar,
         gender: currentProfile?.gender,
       }}
-      validationSchema={profileValidationSchema}
-      onSubmit={onUpdateProfile}
+      onSubmit={(values, { setSubmitting, setFieldError }) => {
+        onUpdateProfile(values, setFieldError);
+        setSubmitting(false);
+      }}
     >
       {({ values, handleChange, handleSubmit, setFieldValue }) => (
         <form

@@ -110,6 +110,7 @@ export const Profiles = () => {
       <div className={"flex self-center"}>
         {isCreateNewProfileFormVisible && (
           <AddProfileForm
+            formName={"Add new profile"}
             userToken={userData?.accessToken}
             setIsCreateNewProfileFormVisible={setIsCreateNewProfileFormVisible}
           />
