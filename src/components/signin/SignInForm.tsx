@@ -50,8 +50,7 @@ export const SignInForm = () => {
         localStorage.setItem("token", accessToken);
       }
 
-      router.push(`/${user.role}/${user._id}`);
-      //todo url user/:id https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes
+      router.push(`/${user.role}/${user._id}/profiles`);
     } catch (error) {
       console.error("Login failed:", error);
       setAuthError("Incorrect email or password");
