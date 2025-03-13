@@ -1,9 +1,10 @@
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { profileValidationSchema } from "@/validation/profileValidationSchema";
 import { Avatar } from "@/components/common/Avatar";
 import { useAddProfileMutation } from "@/lib/api/usersApi";
 import { IProfile } from "@/types/IUser";
+import { CommonButton } from "@/components/common/CommonButton";
 
 interface Props {
   userToken: string | undefined;
@@ -37,6 +38,10 @@ export const AddProfileForm = ({
     inputFileRef.current.click();
   };
 
+  const onFormClose = () => {
+    setIsCreateNewProfileFormVisible(false);
+  };
+
   return (
     <Formik
       initialValues={{
@@ -53,9 +58,9 @@ export const AddProfileForm = ({
       {({ values, handleChange, handleSubmit, setFieldValue }) => (
         <form
           onSubmit={handleSubmit}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 flex-col"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 flex-col z-10"
         >
-          <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg">
+          <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg h-5/6">
             <h2 className="text-center text-xl font-semibold">
               Add new profile
             </h2>
@@ -71,87 +76,93 @@ export const AddProfileForm = ({
               className="hidden"
             />
             <Avatar onAvatarClick={onAvatarClick} avatar={avatar} />
-          </div>
-
-          <div>
-            <input
+            <Field
               type="text"
               name="name"
               placeholder="Name"
               value={values.name}
               onChange={handleChange}
             />
-          </div>
-          <div>
-            <input
+            <Field
               type="number"
               name="phoneNumber"
               placeholder="Phone Number"
               value={values.phoneNumber}
               onChange={handleChange}
             />
-          </div>
-          <div>
-            <input
+            <Field
               type="text"
               name="location"
               placeholder="Location"
               value={values.location}
               onChange={handleChange}
             />
-          </div>
-          <div>
-            <input
+            <Field
               type="text"
               name="country"
               placeholder="Country"
               value={values.country}
               onChange={handleChange}
             />
-          </div>
-          <div>
-            <input
+            <Field
               type="date"
               name="birthdate"
               placeholder="Birthdate"
               value={values.birthdate}
               onChange={handleChange}
             />
-          </div>
-          <div className={"flex"}>
-            <div>
-              <input
-                type="radio"
-                id="male"
-                className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
-                onChange={(e) => {
-                  setFieldValue("gender", e.target.checked && "male");
-                }}
-                checked={values.gender === "male"}
-              />
-              <label htmlFor="male" className="ml-2 text-gray-400">
-                Male
-              </label>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="male"
+                  name="gender"
+                  className="hidden peer"
+                  onChange={(e) => {
+                    setFieldValue("gender", e.target.checked && "male");
+                  }}
+                  checked={values.gender === "male"}
+                />
+                <label
+                  htmlFor="male"
+                  className="w-4 h-4 border-2 border-[#D9D9D9] bg-[#D9D9D9] rounded-none cursor-pointer peer-checked:bg-buttonColor peer-checked:border-buttonColor "
+                ></label>
+                <span
+                  className="ml-2 text-gray-400 cursor-pointer"
+                  onClick={() => setFieldValue("gender", "male")}
+                >
+                  Male
+                </span>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="female"
+                  name="gender"
+                  className="hidden peer"
+                  onChange={(e) => {
+                    setFieldValue("gender", e.target.checked && "female");
+                  }}
+                  checked={values.gender === "female"}
+                />
+                <label
+                  htmlFor="female"
+                  className="w-4 h-4 border-2 border-[#D9D9D9] bg-[#D9D9D9] rounded-none cursor-pointer peer-checked:bg-buttonColor peer-checked:border-buttonColor "
+                ></label>
+                <span
+                  className="ml-2 text-gray-400 cursor-pointer"
+                  onClick={() => setFieldValue("gender", "female")}
+                >
+                  Female
+                </span>
+              </div>
             </div>
-            <div>
-              <input
-                type="radio"
-                id="femail"
-                className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
-                onChange={(e) => {
-                  setFieldValue("gender", e.target.checked && "femail");
-                }}
-                checked={values.gender === "femail"}
-              />
-              <label htmlFor="femail" className="ml-2 text-gray-400">
-                Female
-              </label>
+
+            <div className={"flex justify-between"}>
+              <CommonButton>Save</CommonButton>
+              <CommonButton clickedFn={onFormClose}>Close</CommonButton>
             </div>
           </div>
-          <button type="submit">Add Profile</button>
-          <button onClick={() => setIsCreateNewProfileFormVisible(false)}>
-            Cancel
-          </button>
         </form>
       )}
     </Formik>

@@ -28,7 +28,7 @@ export const Avatar = ({ onAvatarClick, avatar }: Props) => {
           </div>
         </div>
       </div>{" "}
-      <Typography variant="caption" className="mt-2 text-center ">
+      <Typography variant="caption" className="mt-2 text-center text-gray-800">
         Choose picture
       </Typography>
     </>

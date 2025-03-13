@@ -28,7 +28,7 @@ export const SignInForm = () => {
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData));
-      router.push(`/${userData.role}/${userData._id}`);
+      router.push(`/${userData.role}/${userData._id}/profiles`);
     }
   }, [userData, dispatch, router]);
 
