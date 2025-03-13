@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { profileValidationSchema } from "@/validation/profileValidationSchema";
 import { Avatar } from "@/components/common/Avatar";
 import { useAddProfileMutation } from "@/lib/api/usersApi";
+import { IProfile } from "@/types/IUser";
 
 interface Props {
   userToken: string | undefined;
@@ -18,7 +19,7 @@ export const AddProfileForm = ({
 
   const [addProfile] = useAddProfileMutation();
 
-  const onAddProfile = async (values) => {
+  const onAddProfile = async (values: IProfile) => {
     if (!userToken) return;
     try {
       await addProfile({ userToken, profile: values }).unwrap();
@@ -47,15 +48,17 @@ export const AddProfileForm = ({
         avatar: "",
         gender: "",
       }}
-      validationSchema={profileValidationSchema}
       onSubmit={onAddProfile}
     >
       {({ values, handleChange, handleSubmit, setFieldValue }) => (
         <form
           onSubmit={handleSubmit}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 flex-col"
         >
-          <div className="flex justify-center mt-6">
+          <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg">
+            <h2 className="text-center text-xl font-semibold">
+              Add new profile
+            </h2>
             <input
               type="file"
               accept="image/*"

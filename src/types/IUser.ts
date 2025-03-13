@@ -15,7 +15,7 @@ export interface IUser {
 }
 
 export interface IProfile {
-  _id: string;
+  _id?: string;
   name: string;
   phoneNumber: string;
   location: string;
