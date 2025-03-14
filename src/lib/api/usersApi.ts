@@ -8,7 +8,7 @@ export const usersApi = createApi({
   }),
   endpoints: (builder) => ({
     getUserById: builder.query<IUser, string>({
-      query: (id) => `users/${id}`,
+      query: (id) => `users/allUsers/${id}`,
     }),
 
     getUserByToken: builder.query({
@@ -22,8 +22,8 @@ export const usersApi = createApi({
       }),
     }),
 
-    getAllUsers: builder.query<IUser, string>({
-      query: () => `/users`,
+    getAllUsers: builder.query<IUser, void>({
+      query: () => `/users/allUsers`,
     }),
 
     createUser: builder.mutation({
@@ -35,9 +35,16 @@ export const usersApi = createApi({
     }),
 
     deleteUser: builder.mutation({
-      query: (id: string) => ({
-        url: `users/${id}`,
+      query: (userId: string) => ({
+        url: `users/allUsers/${userId}`,
         method: "DELETE",
+      }),
+    }),
+
+    editUser: builder.mutation({
+      query: (userId: string) => ({
+        url: `users/allUsers/${userId}`,
+        method: "PUT",
       }),
     }),
 
@@ -74,4 +81,5 @@ export const {
   useDeleteProfileMutation,
   useUpdateProfileMutation,
   useGetAllUsersQuery,
+  useDeleteUserMutation,
 } = usersApi;

@@ -149,7 +149,14 @@ export const SignUpForm = () => {
                 </label>
               </div>
 
-              <CommonButton disabled={isSubmitting}>Sign up</CommonButton>
+              <CommonButton
+                width={"1/2"}
+                color={"buttonColor"}
+                hoverColor={"red-800"}
+                disabled={isSubmitting}
+              >
+                Sign up
+              </CommonButton>
             </Form>
             <div className="text-textWhite text-center mt-3">
               Have an account?{" "}

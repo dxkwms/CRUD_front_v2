@@ -1,15 +1,12 @@
-"use client";
 import { useState } from "react";
-import { IProfile } from "@/types/IUser";
+import { IProfile, IUser } from "@/types/IUser";
 import { AddProfileForm } from "@/components/profile/AddProfileForm";
 import { EditProfileForm } from "@/components/profile/EditProfileForm";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { calculateAge } from "@/fitch/calculateAge";
-import { useSelector } from "react-redux";
-import { RootState } from "@/types/RootState";
 import Image from "next/image";
 
-export const Profiles = () => {
+export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
     useState(false);
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
@@ -25,13 +22,11 @@ export const Profiles = () => {
   const [isSortByCountryActive, setIsSortByCountryActive] = useState(false);
   const [isSortByCityActive, setIsSortByCityActive] = useState(false);
 
-  const userData = useSelector((state: RootState) => state.user.user);
-
   const onProfileEdit = (profile: IProfile) => {
     setCurrentProfile(profile);
     setIsEditFormVisible(true);
   };
-  console.log(userData);
+
   const filteredProfiles = Array.isArray(userData?.profiles)
     ? userData?.profiles.filter((profile) => {
         const isNameMatch = profile.name

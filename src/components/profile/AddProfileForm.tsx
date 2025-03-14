@@ -79,7 +79,7 @@ export const AddProfileForm = ({
           onSubmit={handleSubmit}
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 flex-col z-10"
         >
-          <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg h-5/6">
+          <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg">
             <h2 className="text-center text-xl font-semibold">{formName}</h2>
             <input
               type="file"
@@ -176,8 +176,21 @@ export const AddProfileForm = ({
             </div>
 
             <div className={"flex justify-between mt-2"}>
-              <CommonButton>Save</CommonButton>
-              <CommonButton clickedFn={onFormClose}>Close</CommonButton>
+              <CommonButton
+                width={"1/3"}
+                color={"editButtonColor"}
+                hoverColor={"[#7cc47a]"}
+              >
+                Save
+              </CommonButton>
+              <CommonButton
+                width={"1/3"}
+                color={"buttonColor"}
+                hoverColor={"red-800"}
+                clickedFn={onFormClose}
+              >
+                Close
+              </CommonButton>
             </div>
           </div>
         </form>
