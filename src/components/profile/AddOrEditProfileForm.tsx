@@ -1,50 +1,48 @@
-import { Field, Formik } from "formik";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Formik } from "formik";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { Avatar } from "@/components/common/Avatar";
-import { useAddProfileMutation } from "@/lib/api/usersApi";
 import { IProfile } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
 import { ProfileField } from "@/components/common/ProfileField";
-import { errorsText } from "@/common/errorsText";
-import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 
 interface Props {
+  avatar: File | null;
   formName: string;
-  userToken: string | undefined;
+  nameValue: string;
+  phoneNumberValue: string;
+  locationValue: string;
+  countryValue: string;
+  birthdateValue: string;
+  avatarValue: string;
+  genderValue: string;
+
+  profileFunction: (
+    values: IProfile,
+    setFieldError: (field: string, message?: string) => void,
+  ) => void;
+
+  onEditCancel?: () => void;
+
+  setAvatar: Dispatch<SetStateAction<File | null>>;
   setIsCreateNewProfileFormVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-export const AddProfileForm = ({
+export const AddOrEditProfileForm = ({
   setIsCreateNewProfileFormVisible,
-  userToken,
   formName,
+  nameValue,
+  phoneNumberValue,
+  locationValue,
+  countryValue,
+  birthdateValue,
+  avatarValue,
+  genderValue,
+  profileFunction,
+  setAvatar,
+  avatar,
+  onEditCancel,
 }: Props) => {
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [addProfile] = useAddProfileMutation();
-  const [addAvatar] = useAddAvatarMutation();
-
   const inputFileRef = useRef<HTMLInputElement>(null);
-
-  const onAddProfile = async (
-    values: IProfile,
-    setFieldError: (field: string, message?: string) => void,
-  ) => {
-    if (!userToken) return;
-    try {
-      const response = await addAvatar({ values, avatar }).unwrap();
-
-      if (!response.url) {
-        setFieldError("avatar", errorsText.avatarUpload);
-        return;
-      }
-
-      values.avatar = response.url;
-      await addProfile({ userToken, profile: values }).unwrap();
-      alert("Profile added successfully!");
-    } catch (error) {
-      console.error("Error adding profile:", error);
-    }
-  };
 
   const onAvatarClick = () => {
     if (!inputFileRef.current) {
@@ -55,22 +53,25 @@ export const AddProfileForm = ({
   };
 
   const onFormClose = () => {
+    if (onEditCancel) {
+      onEditCancel();
+    }
     setIsCreateNewProfileFormVisible(false);
   };
 
   return (
     <Formik
       initialValues={{
-        name: "",
-        phoneNumber: "",
-        location: "",
-        country: "",
-        birthdate: "",
-        avatar: "",
-        gender: "",
+        name: nameValue,
+        phoneNumber: phoneNumberValue,
+        location: locationValue,
+        country: countryValue,
+        birthdate: birthdateValue,
+        avatar: avatarValue,
+        gender: genderValue,
       }}
       onSubmit={(values, { setSubmitting, setFieldError }) => {
-        onAddProfile(values, setFieldError);
+        profileFunction(values, setFieldError);
         setSubmitting(false);
       }}
     >

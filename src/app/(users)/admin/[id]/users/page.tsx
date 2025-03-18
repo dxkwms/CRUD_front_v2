@@ -1,11 +1,14 @@
 import { AllUsers } from "@/components/admin/profile/AllUsers";
+import { Typography } from "@/components/common/Typography";
 
 export const AdminPage = () => {
   return (
-    <>
-      <h2 className="text-xl font-bold mb-4"> Users</h2>
+    <div className={"flex flex-col ml-2"}>
+      <Typography variant={"h2"} className={"font-bold self-center"}>
+        Users
+      </Typography>
       <AllUsers />;
-    </>
+    </div>
   );
 };
 

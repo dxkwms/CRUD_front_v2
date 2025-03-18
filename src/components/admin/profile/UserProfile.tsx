@@ -1,7 +1,10 @@
 import { IUser } from "@/types/IUser";
 import Image from "next/image";
 import { Typography } from "@/components/common/Typography";
-import { useDeleteUserMutation } from "@/lib/api/usersApi";
+import {
+  useDeleteUserMutation,
+  useGetUserProfilesQuery,
+} from "@/lib/api/usersApi";
 import { useState } from "react";
 import { ConfirmDelete } from "@/components/common/ConfirmDelete";
 import { useRouter } from "next/navigation";
@@ -15,6 +18,9 @@ export const UserProfile = ({ user }: { user: IUser }) => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const dispatch = useDispatch();
+  const { data, isLoading } = useGetUserProfilesQuery(user?._id, {
+    skip: !user?._id,
+  });
 
   const router = useRouter();
 
@@ -37,6 +43,9 @@ export const UserProfile = ({ user }: { user: IUser }) => {
       ? user.avatar
       : "/img/profileBackground.png";
 
+  if (isLoading) return <>Loading</>;
+  console.log("Profiles data:", data);
+
   return (
     <>
       <div
@@ -54,7 +63,7 @@ export const UserProfile = ({ user }: { user: IUser }) => {
         <Typography>{user.name}</Typography>
         <Typography>{user.email}</Typography>
         <Typography className={"text-buttonColor"}>
-          Profiles {user.profiles.length}
+          Profiles {data?.length}
         </Typography>
 
         {isHover === user._id && (

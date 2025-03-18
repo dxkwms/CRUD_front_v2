@@ -1,9 +1,14 @@
 import { IProfile } from "@/types/IUser";
 import { useState } from "react";
-import { useDeleteProfileMutation } from "@/lib/api/usersApi";
+import {
+  useAddProfileMutation,
+  useDeleteProfileMutation,
+} from "@/lib/api/usersApi";
 import Image from "next/image";
 import { CommonButton } from "@/components/common/CommonButton";
 import { ConfirmDelete } from "@/components/common/ConfirmDelete";
+import { errorsText } from "@/common/errorsText";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 
 interface Props {
   profile: IProfile;
@@ -17,6 +22,7 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(
     null,
   );
+
   const [deleteProfile] = useDeleteProfileMutation();
 
   const onProfileDelete = async (profileId: string) => {
@@ -43,6 +49,7 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
             className={"rounded-full object-cover"}
             width={64}
             height={64}
+            unoptimized={true}
           />
           <h3>{profile.name}</h3>
         </div>

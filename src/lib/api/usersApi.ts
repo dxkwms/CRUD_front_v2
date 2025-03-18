@@ -8,7 +8,7 @@ export const usersApi = createApi({
   }),
   endpoints: (builder) => ({
     getUserById: builder.query<IUser, string>({
-      query: (id) => `users/allUsers/${id}`,
+      query: (id) => `users/${id}`,
     }),
 
     getUserByToken: builder.query({
@@ -23,7 +23,7 @@ export const usersApi = createApi({
     }),
 
     getAllUsers: builder.query<IUser, void>({
-      query: () => `/users/allUsers`,
+      query: () => `/users/`,
     }),
 
     createUser: builder.mutation({
@@ -36,21 +36,29 @@ export const usersApi = createApi({
 
     deleteUser: builder.mutation({
       query: (userId: string) => ({
-        url: `users/allUsers/${userId}`,
+        url: `users/${userId}`,
         method: "DELETE",
       }),
     }),
 
     editUser: builder.mutation({
       query: (userId: string) => ({
-        url: `users/allUsers/${userId}`,
+        url: `users/${userId}`,
         method: "PUT",
       }),
     }),
 
+    getAllProfiles: builder.query({
+      query: () => `profiles/`,
+    }),
+
+    getUserProfiles: builder.query({
+      query: (userId) => `profiles/${userId}`,
+    }),
+
     addProfile: builder.mutation({
-      query: ({ userToken, profile }) => ({
-        url: `users/${userToken}/profiles`,
+      query: ({ profile, userToken }) => ({
+        url: `profiles/${userToken}`,
         method: "POST",
         body: profile,
       }),
@@ -58,15 +66,15 @@ export const usersApi = createApi({
 
     updateProfile: builder.mutation({
       query: ({ userToken, profileId, profile }) => ({
-        url: `users/${userToken}/profiles/${profileId}`,
+        url: `profiles/${userToken}/${profileId}`,
         method: "PUT",
         body: profile,
       }),
     }),
 
     deleteProfile: builder.mutation({
-      query: ({ userToken, profileId }) => ({
-        url: `users/${userToken}/profiles/${profileId}`,
+      query: ({ profileId, userToken }) => ({
+        url: `profiles/${userToken}/${profileId}`,
         method: "DELETE",
       }),
     }),
@@ -75,6 +83,7 @@ export const usersApi = createApi({
 
 export const {
   useGetUserByIdQuery,
+  useGetUserProfilesQuery,
   useGetUserByTokenQuery,
   useCreateUserMutation,
   useAddProfileMutation,

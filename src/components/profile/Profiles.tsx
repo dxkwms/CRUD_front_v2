@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { IProfile, IUser } from "@/types/IUser";
-import { AddProfileForm } from "@/components/profile/AddProfileForm";
+import { AddOrEditProfileForm } from "@/components/profile/AddOrEditProfileForm";
 import { EditProfileForm } from "@/components/profile/EditProfileForm";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { calculateAge } from "@/fitch/calculateAge";
 import Image from "next/image";
+import { errorsText } from "@/common/errorsText";
+import {
+  useAddProfileMutation,
+  useGetUserProfilesQuery,
+  useUpdateProfileMutation,
+} from "@/lib/api/usersApi";
+import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 
 export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -21,14 +28,75 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   );
   const [isSortByCountryActive, setIsSortByCountryActive] = useState(false);
   const [isSortByCityActive, setIsSortByCityActive] = useState(false);
+  const [avatar, setAvatar] = useState<File | null>(null);
+
+  const { data, isLoading } = useGetUserProfilesQuery(userData?._id);
+
+  const [addProfile] = useAddProfileMutation();
+  const [updateProfile] = useUpdateProfileMutation();
+  const [addAvatar] = useAddAvatarMutation();
 
   const onProfileEdit = (profile: IProfile) => {
     setCurrentProfile(profile);
     setIsEditFormVisible(true);
   };
 
-  const filteredProfiles = Array.isArray(userData?.profiles)
-    ? userData?.profiles.filter((profile) => {
+  const onAddProfile = async (
+    values: IProfile,
+    setFieldError: (field: string, message?: string) => void,
+  ) => {
+    if (!userData?.accessToken) return;
+    try {
+      const response = await addAvatar({ values, avatar }).unwrap();
+
+      if (!response.url) {
+        setFieldError("avatar", errorsText.avatarUpload);
+        return;
+      }
+
+      values.avatar = response.url;
+      await addProfile({
+        profile: values,
+        userToken: userData.accessToken,
+      }).unwrap();
+      alert("Profile added successfully!");
+    } catch (error) {
+      console.error("Error adding profile:", error);
+    }
+  };
+
+  const onUpdateProfile = async (
+    values,
+    setFieldError: (field: string, message?: string) => void,
+  ) => {
+    if (!userData?.accessToken) return;
+    try {
+      const response = await addAvatar({ values, avatar }).unwrap();
+
+      if (!response.url) {
+        setFieldError("avatar", errorsText.avatarUpload);
+        return;
+      }
+
+      values.avatar = response.url;
+      await updateProfile({
+        profileId: currentProfile?._id,
+        profile: values,
+        userToken: userData.accessToken,
+      }).unwrap();
+      alert("Profile updated successfully!");
+      setIsEditFormVisible(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  const onEditCancel = () => {
+    setCurrentProfile(null);
+  };
+
+  const filteredProfiles = Array.isArray(data)
+    ? data.filter((profile) => {
         const isNameMatch = profile.name
           .toLowerCase()
           .startsWith(nameFilter.toLowerCase());
@@ -45,6 +113,8 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
         return isNameMatch && isCityMatch && isCountryMatch && isAgeMatch;
       })
     : [];
+
+  if (isLoading) return <>Loading</>;
 
   return (
     <div>
@@ -104,23 +174,41 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
       </div>
       <div className={"flex self-center"}>
         {isCreateNewProfileFormVisible && (
-          <AddProfileForm
+          <AddOrEditProfileForm
+            avatar={avatar}
+            setAvatar={setAvatar}
+            profileFunction={onAddProfile}
+            avatarValue={""}
+            birthdateValue={""}
+            countryValue={""}
+            genderValue={""}
+            locationValue={""}
+            nameValue={""}
+            phoneNumberValue={""}
             formName={"Add new profile"}
-            userToken={userData?.accessToken}
             setIsCreateNewProfileFormVisible={setIsCreateNewProfileFormVisible}
           />
         )}
 
         {isEditFormVisible && currentProfile && (
-          <EditProfileForm
-            setCurrentProfile={setCurrentProfile}
-            setIsEditFormVisible={setIsEditFormVisible}
-            currentProfile={currentProfile}
-            userToken={userData?.accessToken}
+          <AddOrEditProfileForm
+            profileFunction={onUpdateProfile}
+            setAvatar={setAvatar}
+            avatar={avatar}
+            nameValue={currentProfile.name}
+            phoneNumberValue={currentProfile?.phoneNumber}
+            locationValue={currentProfile?.location}
+            countryValue={currentProfile?.country}
+            birthdateValue={currentProfile?.birthdate}
+            avatarValue={currentProfile?.avatar}
+            genderValue={currentProfile?.gender}
+            onEditCancel={onEditCancel}
+            setIsCreateNewProfileFormVisible={setIsEditFormVisible}
+            formName={"Edit"}
           />
         )}
 
-        <div className={"flex "}>
+        <div className={"flex flex-wrap gap-2"}>
           {filteredProfiles ? (
             filteredProfiles.map((profile: IProfile) => (
               <ProfileForm
@@ -133,18 +221,23 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
           ) : (
             <div>No profiles</div>
           )}
-        </div>
 
-        <div
-          onClick={() =>
-            setIsCreateNewProfileFormVisible((prevState) => !prevState)
-          }
-          className={
-            "cursor-pointer border-amber-50 border-2 w-56 h-64 bg-formBackground flex flex-col items-center justify-center self-center rounded-2xl opacity-90 text-textWhite"
-          }
-        >
-          <Image src={"/img/profileIcon.svg"} alt={""} width={84} height={84} />
-          Create new profile
+          <div
+            onClick={() =>
+              setIsCreateNewProfileFormVisible((prevState) => !prevState)
+            }
+            className={
+              "cursor-pointer border-amber-50 border-2 w-56 h-64 bg-formBackground flex flex-col items-center justify-center self-center rounded-2xl opacity-90 text-textWhite"
+            }
+          >
+            <Image
+              src={"/img/profileIcon.svg"}
+              alt={""}
+              width={84}
+              height={84}
+            />
+            Create new profile
+          </div>
         </div>
       </div>
     </div>
