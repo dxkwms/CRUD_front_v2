@@ -22,7 +22,11 @@ export const AllUsers = () => {
 
   return (
     <div>
-      <FilterInput filter={searchUserByEmail} filterUsers={filterUsers} />
+      <FilterInput
+        filter={searchUserByEmail}
+        filterUsers={filterUsers}
+        filterText={"Search by email"}
+      />
 
       <div className={"flex flex-wrap gap-4"}>
         {filteredUsers?.map((user: IUser) => (

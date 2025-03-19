@@ -9,6 +9,7 @@ import { CommonButton } from "@/components/common/CommonButton";
 import { ConfirmDelete } from "@/components/common/ConfirmDelete";
 import { errorsText } from "@/common/errorsText";
 import { useAddAvatarMutation } from "@/lib/api/avatarApi";
+import { Typography } from "@/components/common/Typography";
 
 interface Props {
   profile: IProfile;
@@ -42,19 +43,19 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
         onMouseEnter={() => setIsHover(profile._id)}
         onMouseLeave={() => setIsHover(null)}
       >
-        <div className={"flex items-center "}>
+        <div className={"flex items-center ml-2 mb-2 mt-2"}>
           <Image
             src={`${profile.avatar}`}
             alt={"avatar"}
             className={"rounded-full object-cover"}
-            width={64}
-            height={64}
+            width={50}
+            height={50}
             unoptimized={true}
           />
-          <h3>{profile.name}</h3>
+          <Typography className={"ml-3"}>{profile.name}</Typography>
         </div>
         <hr className="border-t-2 border-[#F2EDE721]" />
-        <div className="space-y-2">
+        <div className="space-y-2 mt-2 ml-2 mb-2">
           <div className="flex ">
             <span className="text-buttonColor">Phone: </span>
             <span>{profile.phoneNumber}</span>

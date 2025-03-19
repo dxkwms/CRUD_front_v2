@@ -4,6 +4,7 @@ import { Avatar } from "@/components/common/Avatar";
 import { IProfile } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
 import { ProfileField } from "@/components/common/ProfileField";
+import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
 
 interface Props {
   avatar: File | null;
@@ -43,6 +44,11 @@ export const AddOrEditProfileForm = ({
   onEditCancel,
 }: Props) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
+  const wrapperRef = useRef(null);
+  useOutsideDetect({
+    ref: wrapperRef,
+    setIsListOpen: setIsCreateNewProfileFormVisible,
+  });
 
   const onAvatarClick = () => {
     if (!inputFileRef.current) {
@@ -78,9 +84,12 @@ export const AddOrEditProfileForm = ({
       {({ values, handleChange, handleSubmit, setFieldValue }) => (
         <form
           onSubmit={handleSubmit}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 flex-col z-10"
+          className="fixed inset-0 flex items-center justify-center bg-formBackground bg-opacity-50 flex-col z-10"
         >
-          <div className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg">
+          <div
+            className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg"
+            ref={wrapperRef}
+          >
             <h2 className="text-center text-xl font-semibold">{formName}</h2>
             <input
               type="file"
