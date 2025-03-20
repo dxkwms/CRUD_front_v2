@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
+import { FilterButton } from "@/components/admin/profile/FilterButton";
+import { FILTERS } from "@/types/filtersEnum";
 
 interface IProps {
   onFilterChange: (filterType: string) => void;
@@ -24,30 +26,26 @@ export const ProfileFilter = ({ onFilterChange }: IProps) => {
           className="absolute bg-formBackground text-white rounded-b-xl w-32"
           ref={wrapperRef}
         >
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("name")}
-          >
-            Name
-          </button>
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("country")}
-          >
-            Country
-          </button>
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("city")}
-          >
-            City
-          </button>
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("age")}
-          >
-            Users 18+
-          </button>
+          <FilterButton
+            onFilterChange={onFilterChange}
+            buttonText={"Name"}
+            changeValue={FILTERS.NAME}
+          />
+          <FilterButton
+            onFilterChange={onFilterChange}
+            buttonText={"Country"}
+            changeValue={FILTERS.COUNTRY}
+          />
+          <FilterButton
+            onFilterChange={onFilterChange}
+            buttonText={"City"}
+            changeValue={FILTERS.CITY}
+          />
+          <FilterButton
+            onFilterChange={onFilterChange}
+            buttonText={"Users 18+"}
+            changeValue={FILTERS.AGE}
+          />
         </div>
       )}
     </div>

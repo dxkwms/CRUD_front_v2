@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-interface Props {
+interface CommonButtonProps {
   children: ReactNode;
   disabled?: boolean;
   width: string;
@@ -16,7 +16,7 @@ export const CommonButton = ({
   hoverColor,
   color,
   width,
-}: Props) => {
+}: CommonButtonProps) => {
   return (
     <button
       type="submit"

@@ -5,6 +5,8 @@ import { IProfile } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
 import { ProfileField } from "@/components/common/ProfileField";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
+import { GenderCheckbox } from "@/components/common/GenderCheckbox";
+import { GENDERS } from "@/types/gengersEnum";
 
 interface Props {
   avatar: File | null;
@@ -139,50 +141,20 @@ export const AddOrEditProfileForm = ({
               onChange={handleChange}
             />
             <div className="flex justify-center items-center mt-2">
-              <div className="flex items-center mr-5">
-                <input
-                  type="radio"
-                  id="male"
-                  name="gender"
-                  className="hidden peer"
-                  onChange={(e) => {
-                    setFieldValue("gender", e.target.checked && "male");
-                  }}
-                  checked={values.gender === "male"}
-                />
-                <label
-                  htmlFor="male"
-                  className="w-4 h-4 border-2 border-[#D9D9D9] bg-[#D9D9D9] rounded-none cursor-pointer peer-checked:bg-buttonColor peer-checked:border-buttonColor "
-                ></label>
-                <span
-                  className="ml-2 text-gray-400 cursor-pointer"
-                  onClick={() => setFieldValue("gender", "male")}
-                >
-                  Male
-                </span>
-              </div>
-              <div className="flex items-center ml-5">
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  className="hidden peer"
-                  onChange={(e) => {
-                    setFieldValue("gender", e.target.checked && "female");
-                  }}
-                  checked={values.gender === "female"}
-                />
-                <label
-                  htmlFor="female"
-                  className="w-4 h-4 border-2 border-[#D9D9D9] bg-[#D9D9D9] rounded-none cursor-pointer peer-checked:bg-buttonColor peer-checked:border-buttonColor "
-                ></label>
-                <span
-                  className="ml-2 text-gray-400 cursor-pointer"
-                  onClick={() => setFieldValue("gender", "female")}
-                >
-                  Female
-                </span>
-              </div>
+              <GenderCheckbox
+                id={GENDERS.MALE}
+                value={GENDERS.MALE}
+                setFieldValue={setFieldValue}
+                label={"Male"}
+                selectedValue={values.gender}
+              />
+              <GenderCheckbox
+                id={GENDERS.FEMALE}
+                value={GENDERS.FEMALE}
+                setFieldValue={setFieldValue}
+                label={"Female"}
+                selectedValue={values.gender}
+              />
             </div>
 
             <div className={"flex justify-between mt-2"}>
