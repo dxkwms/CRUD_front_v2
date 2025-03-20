@@ -91,4 +91,5 @@ export const {
   useUpdateProfileMutation,
   useGetAllUsersQuery,
   useDeleteUserMutation,
+  useEditUserMutation,
 } = usersApi;
