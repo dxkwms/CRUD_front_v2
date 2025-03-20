@@ -17,7 +17,9 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
   });
 
   useEffect(() => {
+
     if (isAuth && !userData) {
+
       dispatch(setUser(userData));
     } else {
       router.push(`${ROUTES.SIGN_IN}`);

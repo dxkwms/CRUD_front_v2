@@ -29,11 +29,13 @@ export const SignInForm = () => {
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData));
+
       if (userData.role === Role.Admin) {
         router.push(`/${userData.role}/${userData._id}/users`);
       } else {
         router.push(`/${userData.role}/${userData._id}/profiles`);
       }
+
     }
   }, [userData, dispatch, router]);
 
