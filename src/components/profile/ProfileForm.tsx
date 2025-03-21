@@ -1,14 +1,9 @@
 import { IProfile } from "@/types/IUser";
 import { useState } from "react";
-import {
-  useAddProfileMutation,
-  useDeleteProfileMutation,
-} from "@/lib/api/usersApi";
+import { useDeleteProfileMutation } from "@/lib/api/usersApi";
 import Image from "next/image";
-import { CommonButton } from "@/components/common/CommonButton";
 import { ConfirmDelete } from "@/components/common/ConfirmDelete";
-import { errorsText } from "@/common/errorsText";
-import { useAddAvatarMutation } from "@/lib/api/avatarApi";
+
 import { Typography } from "@/components/common/Typography";
 
 interface Props {

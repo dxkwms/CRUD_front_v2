@@ -2,7 +2,6 @@ import { ChangeEvent, useState } from "react";
 import { IProfile, IUser } from "@/types/IUser";
 import { AddOrEditProfileForm } from "@/components/profile/AddOrEditProfileForm";
 import { ProfileForm } from "@/components/profile/ProfileForm";
-import { calculateAge } from "@/fitch/calculateAge";
 import Image from "next/image";
 import { errorsText } from "@/common/errorsText";
 import {
