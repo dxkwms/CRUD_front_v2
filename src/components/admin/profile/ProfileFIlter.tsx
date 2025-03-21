@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
+import { FILTERS } from "@/types/filtersEnum";
+import { CommonButton } from "@/components/common/CommonButton";
 
 interface IProps {
   onFilterChange: (filterType: string) => void;
@@ -24,30 +26,30 @@ export const ProfileFilter = ({ onFilterChange }: IProps) => {
           className="absolute bg-formBackground text-white rounded-b-xl w-32"
           ref={wrapperRef}
         >
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("name")}
+          <CommonButton
+            variant="filter"
+            clickedFn={() => onFilterChange(FILTERS.NAME)}
           >
             Name
-          </button>
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("country")}
+          </CommonButton>
+          <CommonButton
+            variant="filter"
+            clickedFn={() => onFilterChange(FILTERS.COUNTRY)}
           >
             Country
-          </button>
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("city")}
+          </CommonButton>
+          <CommonButton
+            variant="filter"
+            clickedFn={() => onFilterChange(FILTERS.CITY)}
           >
             City
-          </button>
-          <button
-            className="block px-4 py-2 w-full text-left hover:bg-gray-700"
-            onClick={() => onFilterChange("age")}
+          </CommonButton>
+          <CommonButton
+            variant="filter"
+            clickedFn={() => onFilterChange(FILTERS.AGE)}
           >
-            Users 18+
-          </button>
+            Users 18
+          </CommonButton>
         </div>
       )}
     </div>

@@ -5,17 +5,20 @@ import { IProfile } from "@/types/IUser";
 import { CommonButton } from "@/components/common/CommonButton";
 import { ProfileField } from "@/components/common/ProfileField";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
+import { GenderCheckbox } from "@/components/common/GenderCheckbox";
+import { GENDERS } from "@/types/gengersEnum";
+import { Typography } from "@/components/common/Typography";
 
 interface Props {
-  avatar: File | null;
-  formName: string;
-  nameValue: string;
-  phoneNumberValue: string;
-  locationValue: string;
-  countryValue: string;
-  birthdateValue: string;
-  avatarValue: string;
-  genderValue: string;
+  avatar?: File | null;
+  formName?: string;
+  nameValue?: string;
+  phoneNumberValue?: string;
+  locationValue?: string;
+  countryValue?: string;
+  birthdateValue?: string;
+  avatarValue?: string;
+  genderValue?: string;
 
   profileFunction: (
     values: IProfile,
@@ -43,20 +46,11 @@ export const AddOrEditProfileForm = ({
   avatar,
   onEditCancel,
 }: Props) => {
-  const inputFileRef = useRef<HTMLInputElement>(null);
   const wrapperRef = useRef(null);
   useOutsideDetect({
     ref: wrapperRef,
     setIsListOpen: setIsCreateNewProfileFormVisible,
   });
-
-  const onAvatarClick = () => {
-    if (!inputFileRef.current) {
-      return;
-    }
-
-    inputFileRef.current.click();
-  };
 
   const onFormClose = () => {
     if (onEditCancel) {
@@ -68,13 +62,13 @@ export const AddOrEditProfileForm = ({
   return (
     <Formik
       initialValues={{
-        name: nameValue,
-        phoneNumber: phoneNumberValue,
-        location: locationValue,
-        country: countryValue,
-        birthdate: birthdateValue,
-        avatar: avatarValue,
-        gender: genderValue,
+        name: nameValue || "",
+        phoneNumber: phoneNumberValue || "",
+        location: locationValue || "",
+        country: countryValue || "",
+        birthdate: birthdateValue || "",
+        avatar: avatarValue || "",
+        gender: genderValue || "male",
       }}
       onSubmit={(values, { setSubmitting, setFieldError }) => {
         profileFunction(values, setFieldError);
@@ -90,19 +84,14 @@ export const AddOrEditProfileForm = ({
             className="bg-[#f7f4e9] p-6 rounded-lg w-96 shadow-lg"
             ref={wrapperRef}
           >
-            <h2 className="text-center text-xl font-semibold">{formName}</h2>
-            <input
-              type="file"
-              accept="image/*"
-              ref={inputFileRef}
-              onChange={(e) => {
-                if (e.target.files) {
-                  setAvatar(e.target.files?.[0]);
-                }
-              }}
-              className="hidden"
-            />
-            <Avatar onAvatarClick={onAvatarClick} avatar={avatar} />
+            <Typography
+              variant={"h2"}
+              className="text-center text-xl font-semibold"
+            >
+              {formName}
+            </Typography>
+
+            <Avatar avatar={avatar} setAvatar={setAvatar} />
             <ProfileField
               type="text"
               name="name"
@@ -139,64 +128,34 @@ export const AddOrEditProfileForm = ({
               onChange={handleChange}
             />
             <div className="flex justify-center items-center mt-2">
-              <div className="flex items-center mr-5">
-                <input
-                  type="radio"
-                  id="male"
-                  name="gender"
-                  className="hidden peer"
-                  onChange={(e) => {
-                    setFieldValue("gender", e.target.checked && "male");
-                  }}
-                  checked={values.gender === "male"}
-                />
-                <label
-                  htmlFor="male"
-                  className="w-4 h-4 border-2 border-[#D9D9D9] bg-[#D9D9D9] rounded-none cursor-pointer peer-checked:bg-buttonColor peer-checked:border-buttonColor "
-                ></label>
-                <span
-                  className="ml-2 text-gray-400 cursor-pointer"
-                  onClick={() => setFieldValue("gender", "male")}
-                >
-                  Male
-                </span>
-              </div>
-              <div className="flex items-center ml-5">
-                <input
-                  type="radio"
-                  id="female"
-                  name="gender"
-                  className="hidden peer"
-                  onChange={(e) => {
-                    setFieldValue("gender", e.target.checked && "female");
-                  }}
-                  checked={values.gender === "female"}
-                />
-                <label
-                  htmlFor="female"
-                  className="w-4 h-4 border-2 border-[#D9D9D9] bg-[#D9D9D9] rounded-none cursor-pointer peer-checked:bg-buttonColor peer-checked:border-buttonColor "
-                ></label>
-                <span
-                  className="ml-2 text-gray-400 cursor-pointer"
-                  onClick={() => setFieldValue("gender", "female")}
-                >
-                  Female
-                </span>
-              </div>
+              <GenderCheckbox
+                id={GENDERS.MALE}
+                value={GENDERS.MALE}
+                setFieldValue={setFieldValue}
+                label={"Male"}
+                selectedValue={values.gender}
+              />
+              <GenderCheckbox
+                id={GENDERS.FEMALE}
+                value={GENDERS.FEMALE}
+                setFieldValue={setFieldValue}
+                label={"Female"}
+                selectedValue={values.gender}
+              />
             </div>
 
             <div className={"flex justify-between mt-2"}>
               <CommonButton
-                width={"1/3"}
-                color={"editButtonColor"}
-                hoverColor={"[#7cc47a]"}
+                className={"w-1/3"}
+                variant={"apply"}
+                type={"submit"}
               >
                 Save
               </CommonButton>
               <CommonButton
-                width={"1/3"}
-                color={"buttonColor"}
-                hoverColor={"red-800"}
+                type={"submit"}
+                className={"w-1/3"}
+                variant={"cancel"}
                 clickedFn={onFormClose}
               >
                 Close

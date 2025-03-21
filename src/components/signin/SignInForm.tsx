@@ -29,6 +29,7 @@ export const SignInForm = () => {
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData));
+
       if (userData.role === Role.Admin) {
         router.push(`/${userData.role}/${userData._id}/users`);
       } else {
@@ -129,9 +130,9 @@ export const SignInForm = () => {
                 Remember me
               </label>
               <CommonButton
-                width={"1/2"}
-                color={"buttonColor"}
-                hoverColor={"red-800"}
+                type={"submit"}
+                className={"w-1/2"}
+                variant={"cancel"}
                 disabled={isSubmitting}
               >
                 Sign in

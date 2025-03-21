@@ -2,7 +2,6 @@ import { ChangeEvent, useState } from "react";
 import { IProfile, IUser } from "@/types/IUser";
 import { AddOrEditProfileForm } from "@/components/profile/AddOrEditProfileForm";
 import { ProfileForm } from "@/components/profile/ProfileForm";
-import { calculateAge } from "@/fitch/calculateAge";
 import Image from "next/image";
 import { errorsText } from "@/common/errorsText";
 import {
@@ -13,6 +12,8 @@ import {
 import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 import { FilterInput } from "@/common/FilterInput";
 import { ProfileFilter } from "@/components/admin/profile/ProfileFIlter";
+import { useFilteredProfiles } from "@/hooks/useFiltredProfiles";
+import { FILTERS } from "@/types/filtersEnum";
 
 export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -26,6 +27,12 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const { data, isLoading } = useGetUserProfilesQuery(userData?._id);
+
+  const filteredProfiles = useFilteredProfiles(
+    data,
+    selectedFilter,
+    filterQuery,
+  );
 
   const [addProfile] = useAddProfileMutation();
   const [updateProfile] = useUpdateProfileMutation();
@@ -90,31 +97,6 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
     setCurrentProfile(null);
   };
 
-  const filteredProfiles = Array.isArray(data)
-    ? data.filter((profile) => {
-        if (!selectedFilter) return true;
-
-        switch (selectedFilter) {
-          case "name":
-            return profile.name
-              .toLowerCase()
-              .includes(filterQuery.toLowerCase());
-          case "country":
-            return profile.country
-              .toLowerCase()
-              .includes(filterQuery.toLowerCase());
-          case "city":
-            return profile.location
-              .toLowerCase()
-              .includes(filterQuery.toLowerCase());
-          case "age":
-            return calculateAge(profile.birthdate) >= 18;
-          default:
-            return true;
-        }
-      })
-    : [];
-
   const onFilterSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterQuery(e.target.value);
   };
@@ -128,7 +110,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   return (
     <div>
       <div className="flex items-center gap-4 mb-4 justify-between mr-20">
-        {selectedFilter && selectedFilter !== "age" && (
+        {selectedFilter && selectedFilter !== FILTERS.AGE && (
           <FilterInput
             filterText={`Search by ${selectedFilter}`}
             filter={filterQuery}
@@ -143,13 +125,6 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
             avatar={avatar}
             setAvatar={setAvatar}
             profileFunction={onAddProfile}
-            avatarValue={""}
-            birthdateValue={""}
-            countryValue={""}
-            genderValue={""}
-            locationValue={""}
-            nameValue={""}
-            phoneNumberValue={""}
             formName={"Add new profile"}
             setIsCreateNewProfileFormVisible={setIsCreateNewProfileFormVisible}
           />
