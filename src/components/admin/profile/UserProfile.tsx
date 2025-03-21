@@ -44,7 +44,6 @@ export const UserProfile = ({ user }: { user: IUser }) => {
       : "/img/profileBackground.png";
 
   if (isLoading) return <>Loading</>;
-  console.log("Profiles data:", data);
 
   return (
     <>

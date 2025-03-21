@@ -126,13 +126,6 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
             avatar={avatar}
             setAvatar={setAvatar}
             profileFunction={onAddProfile}
-            avatarValue={""}
-            birthdateValue={""}
-            countryValue={""}
-            genderValue={""}
-            locationValue={""}
-            nameValue={""}
-            phoneNumberValue={""}
             formName={"Add new profile"}
             setIsCreateNewProfileFormVisible={setIsCreateNewProfileFormVisible}
           />

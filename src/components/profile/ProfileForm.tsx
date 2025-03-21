@@ -57,28 +57,28 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
         <hr className="border-t-2 border-[#F2EDE721]" />
         <div className="space-y-2 mt-2 ml-2 mb-2">
           <div className="flex ">
-            <span className="text-buttonColor">Phone: </span>
-            <span>{profile.phoneNumber}</span>
+            <Typography className="text-buttonColor">Phone: </Typography>
+            <Typography>{profile.phoneNumber}</Typography>
           </div>
 
           <div className="flex ">
-            <span className="text-buttonColor">Location: </span>
-            <span>{profile.location}</span>
+            <Typography className="text-buttonColor">Location: </Typography>
+            <Typography>{profile.location}</Typography>
           </div>
 
           <div className="flex ">
-            <span className="text-buttonColor">Country: </span>
-            <span>{profile.country}</span>
+            <Typography className="text-buttonColor">Country: </Typography>
+            <Typography>{profile.country}</Typography>
           </div>
 
           <div className="flex ">
-            <span className="text-buttonColor">Birthdate: </span>
-            <span>{profile.birthdate}</span>
+            <Typography className="text-buttonColor">Birthdate: </Typography>
+            <Typography>{profile.birthdate}</Typography>
           </div>
 
           <div className="flex ">
-            <span className="text-buttonColor">Gender: </span>
-            <span>{profile.gender}</span>
+            <Typography className="text-buttonColor">Gender: </Typography>
+            <Typography>{profile.gender}</Typography>
           </div>
         </div>
 

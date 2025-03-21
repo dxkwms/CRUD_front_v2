@@ -35,7 +35,6 @@ export const SignInForm = () => {
       } else {
         router.push(`/${userData.role}/${userData._id}/profiles`);
       }
-
     }
   }, [userData, dispatch, router]);
 
@@ -131,9 +130,9 @@ export const SignInForm = () => {
                 Remember me
               </label>
               <CommonButton
-                width={"1/2"}
-                color={"buttonColor"}
-                hoverColor={"red-800"}
+                type={"submit"}
+                className={"w-1/2"}
+                variant={"cancel"}
                 disabled={isSubmitting}
               >
                 Sign in

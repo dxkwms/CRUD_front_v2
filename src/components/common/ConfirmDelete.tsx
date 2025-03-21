@@ -1,4 +1,7 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useRef } from "react";
+import { Typography } from "@/components/common/Typography";
+import { CommonButton } from "@/components/common/CommonButton";
+import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
 
 interface Props {
   selectedId: string | null;
@@ -11,33 +14,44 @@ export const ConfirmDelete = ({
   onEntityDelete,
   selectedId,
 }: Props) => {
+  const wrapperRef = useRef(null);
+  useOutsideDetect({
+    ref: wrapperRef,
+    setIsListOpen: setIsConfirmOpen,
+  });
+
+  const onDeleteCancel = () => {
+    setIsConfirmOpen(false);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <p className="text-lg font-semibold mb-4">
+      <div
+        className="bg-white p-6 rounded-lg shadow-lg w-80 text-center"
+        ref={wrapperRef}
+      >
+        <Typography className="text-lg font-semibold mb-4">
           Are you sure you want to delete profile?
-        </p>
+        </Typography>
         <div className="flex justify-around">
-          <button
-            onClick={() => {
+          <CommonButton
+            clickedFn={() => {
               if (selectedId) {
                 onEntityDelete(selectedId);
               }
             }}
-            className={`
-        w-1/3 py-2 bg-editButtonColor text-white font-bold rounded-lg hover:bg-[#7cc47a] focus:outline-none focus:ring-2 focus:ring-[#7cc47a] mx-auto block transition
-      `}
+            className={`w-1/3`}
+            variant={"apply"}
           >
             Yes
-          </button>
-          <button
-            onClick={() => setIsConfirmOpen(false)}
-            className={`
-        w-1/3 py-2 bg-buttonColor text-white font-bold rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-800 mx-auto block transition
-      `}
+          </CommonButton>
+          <CommonButton
+            clickedFn={() => onDeleteCancel()}
+            variant={"cancel"}
+            className={"w-1/3"}
           >
             No
-          </button>
+          </CommonButton>
         </div>
       </div>
     </div>
