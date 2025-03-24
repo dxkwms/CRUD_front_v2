@@ -34,7 +34,7 @@ export const SignUpForm = () => {
       const formData = new FormData();
       formData.append("file", avatar);
 
-      const response = await addAvatar({ formData, avatar }).unwrap();
+      const response = await addAvatar({ avatar }).unwrap();
 
       if (!response.url) {
         setFieldError("avatar", errorsText.avatarUpload);

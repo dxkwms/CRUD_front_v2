@@ -2,6 +2,7 @@ import { SetStateAction, useRef } from "react";
 import { Typography } from "@/components/common/Typography";
 import { CommonButton } from "@/components/common/CommonButton";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
+import { FormWrapper } from "@/common/FormWrapper";
 
 interface Props {
   selectedId: string | null;
@@ -25,7 +26,7 @@ export const ConfirmDelete = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <FormWrapper>
       <div
         className="bg-white p-6 rounded-lg shadow-lg w-80 text-center"
         ref={wrapperRef}
@@ -38,6 +39,7 @@ export const ConfirmDelete = ({
             clickedFn={() => {
               if (selectedId) {
                 onEntityDelete(selectedId);
+                setIsConfirmOpen(true);
               }
             }}
             className={`w-1/3`}
@@ -54,6 +56,6 @@ export const ConfirmDelete = ({
           </CommonButton>
         </div>
       </div>
-    </div>
+    </FormWrapper>
   );
 };

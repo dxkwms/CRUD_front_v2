@@ -14,6 +14,8 @@ import { FilterInput } from "@/common/FilterInput";
 import { ProfileFilter } from "@/components/admin/profile/ProfileFIlter";
 import { useFilteredProfiles } from "@/hooks/useFiltredProfiles";
 import { FILTERS } from "@/types/filtersEnum";
+import { Typography } from "@/components/common/Typography";
+import { usePathname } from "next/navigation";
 
 export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -21,7 +23,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [currentProfile, setCurrentProfile] = useState<IProfile | null>(null);
   const [filterQuery, setFilterQuery] = useState("");
-
+  const pathname = usePathname();
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
 
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -105,20 +107,31 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
     setSelectedFilter(filterType);
     setFilterQuery("");
   };
+
   if (isLoading) return <>Loading</>;
 
   return (
     <div>
-      <div className="flex items-center gap-4 mb-4 justify-between mr-20">
-        {selectedFilter && selectedFilter !== FILTERS.AGE && (
-          <FilterInput
-            filterText={`Search by ${selectedFilter}`}
-            filter={filterQuery}
-            filterUsers={onFilterSearch}
-          />
-        )}
-        <ProfileFilter onFilterChange={onFilterChange} />
-      </div>
+      <Typography
+        variant={"h2"}
+        className={`${pathname.split("/")[1] === "user" && " flex justify-self-center"} mb-5`}
+      >
+        Profiles
+      </Typography>
+
+      {pathname.split("/")[1] === "user" && (
+        <div className="flex items-center gap-4 mb-4 justify-between mr-20">
+          {selectedFilter && selectedFilter !== FILTERS.AGE && (
+            <FilterInput
+              filterText={`Search by ${selectedFilter}`}
+              filter={filterQuery}
+              filterUsers={onFilterSearch}
+            />
+          )}
+          <ProfileFilter onFilterChange={onFilterChange} />
+        </div>
+      )}
+
       <div className={"flex self-center"}>
         {isCreateNewProfileFormVisible && (
           <AddOrEditProfileForm

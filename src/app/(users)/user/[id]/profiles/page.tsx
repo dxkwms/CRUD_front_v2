@@ -1,4 +1,3 @@
-
 "use client";
 import { Profiles } from "@/components/profile/Profiles";
 import { useSelector } from "react-redux";
@@ -10,9 +9,6 @@ export const ProfilePage = () => {
 
   return (
     <div className={"flex flex-col ml-2 w-full"}>
-      <Typography variant={"h2"} className={"font-bold self-center"}>
-        Profiles
-      </Typography>
       <Profiles userData={userData} />;
     </div>
   );

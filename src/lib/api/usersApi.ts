@@ -42,9 +42,16 @@ export const usersApi = createApi({
     }),
 
     editUser: builder.mutation({
-      query: (userId: string) => ({
+      query: ({
+        userId,
+        updateData,
+      }: {
+        userId: string;
+        updateData: IUser;
+      }) => ({
         url: `users/${userId}`,
         method: "PUT",
+        body: updateData,
       }),
     }),
 
