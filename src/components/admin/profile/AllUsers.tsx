@@ -2,12 +2,10 @@
 import { useGetAllUsersQuery } from "@/lib/api/usersApi";
 import { IUser } from "@/types/IUser";
 import { UserProfile } from "@/components/admin/profile/UserProfile";
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { FilterInput } from "@/common/FilterInput";
 import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
 import { usePaginateData } from "@/hooks/common/usePaginateData";
-import { isElementAtBottomOfPage } from "@/utils/isElementAtBottomOfPage";
-import { useScrollListener } from "@/hooks/dom/useScrollListener";
 
 export const AllUsers = () => {
   const [searchUserByEmail, setSearchUserByEmail] = useState<string>("");
@@ -25,13 +23,11 @@ export const AllUsers = () => {
     page,
   });
 
-  const scrollHandler = useCallback(() => {
-    if (isElementAtBottomOfPage() && !isFetchingRef.current) {
-      setPage((prevPage) => prevPage + 1);
+  const onPageChange = (newPage: number) => {
+    if (newPage > 0) {
+      setPage(newPage);
     }
-  }, []);
-
-  useScrollListener(scrollHandler);
+  };
 
   const paginatedItemsPrepared = useMemo(
     () =>
@@ -64,6 +60,24 @@ export const AllUsers = () => {
         {filteredUsers?.map((user: IUser) => (
           <UserProfile user={user} key={user._id} />
         ))}
+      </div>
+
+      <div className="flex justify-center items-center gap-2 mt-4">
+        <button
+          className="p-2 bg-gray-300 rounded-full hover:bg-gray-400 disabled:opacity-50"
+          onClick={() => onPageChange(page - 1)}
+          disabled={page === 1}
+        >
+          &lt;
+        </button>
+        <span>Page {page}</span>
+        <button
+          className="p-2 bg-gray-300 rounded-full hover:bg-gray-400 disabled:opacity-50"
+          onClick={() => onPageChange(page + 1)}
+          disabled={isFetching || !data?.users || data.users.length === 0}
+        >
+          &gt;
+        </button>
       </div>
     </div>
   );

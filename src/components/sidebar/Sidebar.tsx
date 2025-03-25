@@ -19,10 +19,10 @@ export const Sidebar = ({
   return (
     <div
       className={
-        "bg-formBackground h-screen w-1/5 flex flex-col justify-between"
+        "bg-formBackground min-h-screen w-1/5 flex flex-col justify-between"
       }
     >
-      <div className="w-full">
+      <div className="w-full ">
         <div className={"flex flex-col items-center mt-5"}>
           <Image
             src={`${avatar ? avatar : ""}`}

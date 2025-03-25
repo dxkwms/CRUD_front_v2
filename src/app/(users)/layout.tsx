@@ -15,7 +15,7 @@ export default function ProfileLayout({
 
   return (
     <div
-      className="bg-local bg-cover bg-center h-screen w-full flex"
+      className="bg-local bg-cover bg-center min-h-screen w-full flex"
       style={{ backgroundImage: `url(/img/profileBackground.png)` }}
     >
       <Sidebar

@@ -62,7 +62,7 @@ export const UserProfile = ({ user }: { user: IUser }) => {
         <Typography>{user.name}</Typography>
         <Typography>{user.email}</Typography>
         <Typography className={"text-buttonColor"}>
-          Profiles {data?.length}
+          Profiles {data?.profiles.length}
         </Typography>
 
         {isHover === user._id && (
