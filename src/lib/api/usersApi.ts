@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IUser } from "@/types/IUser";
+import { IProfile, IUser } from "@/types/IUser";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
@@ -59,8 +59,14 @@ export const usersApi = createApi({
       query: () => `profiles/`,
     }),
 
-    getUserProfiles: builder.query({
-      query: (userId) => `profiles/${userId}`,
+    getUserProfiles: builder.query<
+      { profiles: IProfile[]; totalPages: number; currentPage: number },
+      { userId: string; page: number; limit: number }
+    >({
+      query: ({ userId, page, limit }) => ({
+        url: `profiles/${userId}`,
+        params: { page, limit },
+      }),
     }),
 
     addProfile: builder.mutation({

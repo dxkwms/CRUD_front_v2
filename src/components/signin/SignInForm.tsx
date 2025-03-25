@@ -13,6 +13,7 @@ import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 import { ROUTES } from "@/types/routesEnum";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
 import { Role } from "@/types/IUser";
+import { login } from "@/lib/slice/authSlice";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
@@ -51,9 +52,9 @@ export const SignInForm = () => {
       }
 
       dispatch(setUser(user));
-
       if (isRememberMeActive) {
         localStorage.setItem("token", accessToken);
+        dispatch(login());
       }
 
       router.push(`/${user.role}/${user._id}/profiles`);

@@ -25,7 +25,7 @@ export const Sidebar = ({
       <div className="w-full">
         <div className={"flex flex-col items-center mt-5"}>
           <Image
-            src={`${avatar}`}
+            src={`${avatar ? avatar : ""}`}
             alt={"avatar"}
             className={"rounded-full object-cover "}
             width={96}

@@ -22,7 +22,7 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
     if (isAuth && userData) {
       dispatch(setUser(userData));
     } else {
-      router.push(`${ROUTES.SIGN_IN}`);
+      router.replace(`${ROUTES.SIGN_IN}`);
     }
   }, [isAuth, userData]);
 

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
 import { IProfile, IUser } from "@/types/IUser";
 import { AddOrEditProfileForm } from "@/components/profile/AddOrEditProfileForm";
 import { ProfileForm } from "@/components/profile/ProfileForm";
@@ -16,6 +16,10 @@ import { useFilteredProfiles } from "@/hooks/useFiltredProfiles";
 import { FILTERS } from "@/types/filtersEnum";
 import { Typography } from "@/components/common/Typography";
 import { usePathname } from "next/navigation";
+import { usePaginateData } from "@/hooks/common/usePaginateData";
+import { useScrollListener } from "@/hooks/dom/useScrollListener";
+import { isElementAtBottomOfPage } from "@/utils/isElementAtBottomOfPage";
+import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
 
 export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -23,18 +27,24 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [currentProfile, setCurrentProfile] = useState<IProfile | null>(null);
   const [filterQuery, setFilterQuery] = useState("");
-  const pathname = usePathname();
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-
+  const [page, setPage] = useState(1);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const pathname = usePathname();
 
-  const { data, isLoading } = useGetUserProfilesQuery(userData?._id);
+  const { data, isLoading, isFetching, refetch } = useGetUserProfilesQuery({
+    userId: userData?._id!,
+    page,
+    limit: PAGINATION_LIMIT_COUNT.profiles_limit,
+  });
 
-  const filteredProfiles = useFilteredProfiles(
-    data,
-    selectedFilter,
-    filterQuery,
-  );
+  const isFetchingRef = useRef(isFetching);
+  isFetchingRef.current = isFetching;
+
+  const paginatedData = usePaginateData({
+    data: data?.profiles,
+    page,
+  });
 
   const [addProfile] = useAddProfileMutation();
   const [updateProfile] = useUpdateProfileMutation();
@@ -52,7 +62,6 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
     if (!userData?.accessToken) return;
     try {
       const response = await addAvatar({ values, avatar }).unwrap();
-
       if (!response.url) {
         setFieldError("avatar", errorsText.avatarUpload);
         return;
@@ -62,7 +71,9 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
       await addProfile({
         profile: values,
         userToken: userData.accessToken,
-      }).unwrap();
+      })
+        .unwrap()
+        .finally(() => refetch());
       alert("Profile added successfully!");
     } catch (error) {
       console.error("Error adding profile:", error);
@@ -87,7 +98,9 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
         profileId: currentProfile?._id,
         profile: values,
         userToken: userData.accessToken,
-      }).unwrap();
+      })
+        .unwrap()
+        .finally(() => refetch());
       alert("Profile updated successfully!");
       setIsEditFormVisible(false);
     } catch (error) {
@@ -107,6 +120,28 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
     setSelectedFilter(filterType);
     setFilterQuery("");
   };
+
+  const scrollHandler = useCallback(() => {
+    if (isElementAtBottomOfPage() && !isFetchingRef.current) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, []);
+
+  useScrollListener(scrollHandler);
+
+  const paginatedItemsPrepared = useMemo(
+    () =>
+      paginatedData?.filter(Boolean) as Array<
+        NonNullable<(typeof paginatedData)[number]>
+      >,
+    [paginatedData],
+  );
+
+  const filteredProfiles = useFilteredProfiles(
+    paginatedItemsPrepared,
+    selectedFilter,
+    filterQuery,
+  );
 
   if (isLoading) return <>Loading</>;
 
@@ -165,6 +200,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
           {filteredProfiles ? (
             filteredProfiles.map((profile: IProfile) => (
               <ProfileForm
+                refetch={refetch}
                 key={profile._id}
                 profile={profile}
                 userToken={userData?.accessToken}

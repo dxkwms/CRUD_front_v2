@@ -9,10 +9,16 @@ import { Typography } from "@/components/common/Typography";
 interface Props {
   profile: IProfile;
   userToken: string | undefined;
+  refetch: () => void;
   onProfileEdit: (profile: IProfile) => void;
 }
 
-export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
+export const ProfileForm = ({
+  profile,
+  userToken,
+  onProfileEdit,
+  refetch,
+}: Props) => {
   const [isHover, setIsHover] = useState<string | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedProfileId, setSelectedProfileId] = useState<string | null>(
@@ -23,8 +29,10 @@ export const ProfileForm = ({ profile, userToken, onProfileEdit }: Props) => {
 
   const onProfileDelete = async (profileId: string) => {
     try {
-      await deleteProfile({ userToken, profileId });
-      setIsConfirmOpen(false);
+      await deleteProfile({ userToken, profileId }).finally(() => {
+        setIsConfirmOpen(false);
+        refetch();
+      });
     } catch (error) {
       console.log("Error deleting profile:", error);
     }
