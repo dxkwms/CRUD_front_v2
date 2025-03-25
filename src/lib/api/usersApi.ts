@@ -22,8 +22,14 @@ export const usersApi = createApi({
       }),
     }),
 
-    getAllUsers: builder.query<IUser, void>({
-      query: () => `/users/`,
+    getAllUsers: builder.query<
+      { users: IUser[]; totalPages: number; currentPage: number },
+      { page: number; limit: number }
+    >({
+      query: ({ page, limit }) => ({
+        url: `/users/`,
+        params: { page, limit },
+      }),
     }),
 
     createUser: builder.mutation({
