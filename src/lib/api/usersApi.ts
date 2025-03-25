@@ -22,8 +22,8 @@ export const usersApi = createApi({
       }),
     }),
 
-    getAllUsers: builder.query<IUser, string>({
-      query: () => `/users`,
+    getAllUsers: builder.query<IUser, void>({
+      query: () => `/users/`,
     }),
 
     createUser: builder.mutation({
@@ -35,31 +35,46 @@ export const usersApi = createApi({
     }),
 
     deleteUser: builder.mutation({
-      query: (id: string) => ({
-        url: `users/${id}`,
+      query: (userId: string) => ({
+        url: `users/${userId}`,
         method: "DELETE",
       }),
     }),
 
+    editUser: builder.mutation({
+      query: (userId: string) => ({
+        url: `users/${userId}`,
+        method: "PUT",
+      }),
+    }),
+
+    getAllProfiles: builder.query({
+      query: () => `profiles/`,
+    }),
+
+    getUserProfiles: builder.query({
+      query: (userId) => `profiles/${userId}`,
+    }),
+
     addProfile: builder.mutation({
-      query: ({ userId, profile }) => ({
-        url: `users/${userId}/profiles`,
+      query: ({ profile, userToken }) => ({
+        url: `profiles/${userToken}`,
         method: "POST",
         body: profile,
       }),
     }),
 
     updateProfile: builder.mutation({
-      query: ({ userId, profileId, profile }) => ({
-        url: `users/${userId}/profiles/${profileId}`,
+      query: ({ userToken, profileId, profile }) => ({
+        url: `profiles/${userToken}/${profileId}`,
         method: "PUT",
         body: profile,
       }),
     }),
 
     deleteProfile: builder.mutation({
-      query: ({ userId, profileId }) => ({
-        url: `users/${userId}/profiles/${profileId}`,
+      query: ({ profileId, userToken }) => ({
+        url: `profiles/${userToken}/${profileId}`,
         method: "DELETE",
       }),
     }),
@@ -68,10 +83,12 @@ export const usersApi = createApi({
 
 export const {
   useGetUserByIdQuery,
+  useGetUserProfilesQuery,
   useGetUserByTokenQuery,
   useCreateUserMutation,
   useAddProfileMutation,
   useDeleteProfileMutation,
   useUpdateProfileMutation,
   useGetAllUsersQuery,
+  useDeleteUserMutation,
 } = usersApi;

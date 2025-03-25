@@ -1,15 +1,35 @@
 import Image from "next/image";
 import { Typography } from "@/components/common/Typography";
+import { Dispatch, SetStateAction, useRef } from "react";
 
 interface Props {
-  onAvatarClick: () => void;
-
-  avatar: File | null;
+  avatar?: File | null;
+  setAvatar: Dispatch<SetStateAction<File | null>>;
 }
 
-export const Avatar = ({ onAvatarClick, avatar }: Props) => {
+export const Avatar = ({ avatar, setAvatar }: Props) => {
+  const inputFileRef = useRef<HTMLInputElement>(null);
+  const onAvatarClick = () => {
+    if (!inputFileRef.current) {
+      return;
+    }
+
+    inputFileRef.current.click();
+  };
+
   return (
     <>
+      <input
+        type="file"
+        accept="image/*"
+        ref={inputFileRef}
+        onChange={(e) => {
+          if (e.target.files) {
+            setAvatar(e.target.files?.[0]);
+          }
+        }}
+        className="hidden"
+      />
       <div className="flex justify-center mt-6">
         <div
           onClick={onAvatarClick}
@@ -28,7 +48,7 @@ export const Avatar = ({ onAvatarClick, avatar }: Props) => {
           </div>
         </div>
       </div>{" "}
-      <Typography variant="caption" className="mt-2 text-center ">
+      <Typography variant="caption" className="mt-2 text-center text-gray-800">
         Choose picture
       </Typography>
     </>

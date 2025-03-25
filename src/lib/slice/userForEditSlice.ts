@@ -9,14 +9,14 @@ const initialState: UserState = {
   user: null,
 };
 
-export const userSlice = createSlice({
-  name: "user",
+export const userForEditSlice = createSlice({
+  name: "userForEdit",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<IUser>) => {
+    setUserForEdit: (state, action: PayloadAction<IUser>) => {
       state.user = action.payload;
     },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUserForEdit } = userForEditSlice.actions;

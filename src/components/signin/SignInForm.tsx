@@ -12,6 +12,7 @@ import { useSignInMutation } from "@/lib/api/signinApi";
 import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 import { ROUTES } from "@/types/routesEnum";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
+import { Role } from "@/types/IUser";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
@@ -28,7 +29,12 @@ export const SignInForm = () => {
   useEffect(() => {
     if (userData) {
       dispatch(setUser(userData));
-      router.push(`/${userData.role}/${userData._id}`);
+
+      if (userData.role === Role.Admin) {
+        router.push(`/${userData.role}/${userData._id}/users`);
+      } else {
+        router.push(`/${userData.role}/${userData._id}/profiles`);
+      }
     }
   }, [userData, dispatch, router]);
 
@@ -123,7 +129,14 @@ export const SignInForm = () => {
               <label htmlFor="remember_me" className="ml-2 text-gray-400">
                 Remember me
               </label>
-              <CommonButton disabled={isSubmitting}>Sign in</CommonButton>
+              <CommonButton
+                type={"submit"}
+                className={"w-1/2"}
+                variant={"cancel"}
+                disabled={isSubmitting}
+              >
+                Sign in
+              </CommonButton>
             </Form>
 
             <div className="text-textWhite text-center mt-3">

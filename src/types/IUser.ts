@@ -10,11 +10,11 @@ export interface IUser {
   password: string;
   role: Role;
   avatar: string;
-  profiles: IProfile[];
+  accessToken?: string;
 }
 
 export interface IProfile {
-  _id: string;
+  _id?: string;
   name: string;
   phoneNumber: string;
   location: string;

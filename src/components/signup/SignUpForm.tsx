@@ -50,14 +50,6 @@ export const SignUpForm = () => {
     }
   };
 
-  const onAvatarClick = () => {
-    if (!inputFileRef.current) {
-      return;
-    }
-
-    inputFileRef.current.click();
-  };
-
   return (
     <Formik
       initialValues={{
@@ -88,7 +80,7 @@ export const SignUpForm = () => {
               Sign up
             </Typography>
 
-            <Avatar avatar={avatar} onAvatarClick={onAvatarClick} />
+            <Avatar avatar={avatar} setAvatar={setAvatar} />
 
             <ErrorComponent errorValue={signupError} />
             <Form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -149,7 +141,14 @@ export const SignUpForm = () => {
                 </label>
               </div>
 
-              <CommonButton disabled={isSubmitting}>Sign up</CommonButton>
+              <CommonButton
+                type={"submit"}
+                className={"w-1/2"}
+                variant={"cancel"}
+                disabled={isSubmitting}
+              >
+                Sign up
+              </CommonButton>
             </Form>
             <div className="text-textWhite text-center mt-3">
               Have an account?{" "}

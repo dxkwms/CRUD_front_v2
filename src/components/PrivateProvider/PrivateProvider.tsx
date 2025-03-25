@@ -16,15 +16,17 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
     skip: !accessToken,
   });
 
+  const userDataToFix = useSelector((state: RootState) => state.user.user);
+
   useEffect(() => {
     if (isAuth && userData) {
       dispatch(setUser(userData));
     } else {
       router.push(`${ROUTES.SIGN_IN}`);
     }
-  }, [dispatch, isAuth, router, userData]);
+  }, [isAuth, userData]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || !userDataToFix) return <div>Loading...</div>;
 
   return <>{children}</>;
 };

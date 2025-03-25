@@ -5,6 +5,7 @@ import { signinApi } from "@/lib/api/signinApi";
 import { avatarApi } from "@/lib/api/avatarApi";
 import { userSlice } from "@/lib/slice/userSlice";
 import { authSlice } from "@/lib/slice/authSlice";
+import { userForEditSlice } from "@/lib/slice/userForEditSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     [signinApi.reducerPath]: signinApi.reducer,
     user: userSlice.reducer,
     auth: authSlice.reducer,
+    userForEdit: userForEditSlice.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
