@@ -31,7 +31,7 @@ export const ConfirmDelete = ({
         className="bg-white p-6 rounded-lg shadow-lg w-80 text-center"
         ref={wrapperRef}
       >
-        <Typography className="text-lg font-semibold mb-4">
+        <Typography className="text-lg font-semibold mb-4 text-[#12130F]">
           Are you sure you want to delete profile?
         </Typography>
         <div className="flex justify-around">

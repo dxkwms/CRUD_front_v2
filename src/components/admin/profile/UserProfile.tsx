@@ -10,6 +10,7 @@ import { ConfirmDelete } from "@/components/common/ConfirmDelete";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUserForEdit } from "@/lib/slice/userForEditSlice";
+import { HoveredProfileSection } from "@/components/common/HoveredProfileSection";
 
 export const UserProfile = ({ user }: { user: IUser }) => {
   const [isHover, setIsHover] = useState<string | null>(null);
@@ -66,23 +67,11 @@ export const UserProfile = ({ user }: { user: IUser }) => {
         </Typography>
 
         {isHover === user._id && (
-          <div className="absolute top-0 bottom-0 left-0 w-full flex justify-between border rounded-3xl ">
-            <button
-              onClick={() => onUserEdit(user)}
-              className="bg-editButtonColor text-formBackground p-2 rounded-l-3xl hover:bg-textWhite transition w-1/2"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => {
-                setSelectedUserId(user._id);
-                setIsConfirmOpen(true);
-              }}
-              className="bg-buttonColor text-formBackground p-2 rounded-r-3xl hover:bg-textWhite transition w-1/2"
-            >
-              Delete
-            </button>
-          </div>
+          <HoveredProfileSection
+            entity={user}
+            onEntityEdit={onUserEdit}
+            onEntityDelete={onUserDelete}
+          />
         )}
       </div>
       {isConfirmOpen && (
