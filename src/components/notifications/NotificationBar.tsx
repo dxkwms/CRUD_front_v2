@@ -1,6 +1,6 @@
 import { useSocket } from "@/hooks/useSocket";
 
-export const NotificationBar = (userId?: string) => {
+export const NotificationBar = ({ userId }: { userId: string | undefined }) => {
   const { notifications } = useSocket(userId);
 
   return (
