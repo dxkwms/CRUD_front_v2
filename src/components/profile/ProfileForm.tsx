@@ -108,6 +108,7 @@ export const ProfileForm = ({
 
       {isConfirmOpen && (
         <ConfirmDelete
+          deleteEntityName={"profile"}
           onEntityDelete={onProfileDelete}
           selectedId={selectedProfileId}
           setIsConfirmOpen={setIsConfirmOpen}

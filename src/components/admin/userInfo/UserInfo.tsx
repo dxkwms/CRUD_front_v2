@@ -97,6 +97,7 @@ export const UserInfo = ({ userData }: { userData: IUser | null }) => {
 
       {isConfirmDeleteOpen && (
         <ConfirmDelete
+          deleteEntityName={"user"}
           selectedId={userData?._id}
           onEntityDelete={onUserDelete}
           setIsConfirmOpen={setIsConfirmDeleteOpen}

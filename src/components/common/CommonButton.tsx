@@ -19,7 +19,7 @@ export const CommonButton = ({
   type = "button",
 }: CommonButtonProps) => {
   const baseStyles =
-    "h-10 text-textWhite font-bold rounded-lg focus:outline-none focus:ring-2 mx-auto block transition";
+    "h-10 text-textWhite  rounded-lg focus:outline-none focus:ring-2 mx-auto block transition";
 
   const variantStyles = {
     apply: "bg-editButtonColor hover:bg-[#7cc47a] focus:ring-[#7cc47a]",

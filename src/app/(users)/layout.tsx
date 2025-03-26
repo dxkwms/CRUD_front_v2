@@ -19,6 +19,8 @@ export default function ProfileLayout({
       style={{ backgroundImage: `url(/img/profileBackground.png)` }}
     >
       <Sidebar
+        id={userData?._id}
+        role={userData?.role}
         avatar={userData?.avatar}
         name={userData?.name}
         setIsProfileActive={setIsProfileActive}

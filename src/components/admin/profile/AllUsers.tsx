@@ -10,7 +10,7 @@ import { usePaginateData } from "@/hooks/common/usePaginateData";
 export const AllUsers = () => {
   const [searchUserByEmail, setSearchUserByEmail] = useState<string>("");
   const [page, setPage] = useState(1);
-  const { data, error, isLoading, isFetching } = useGetAllUsersQuery({
+  const { data, error, isLoading, isFetching, refetch } = useGetAllUsersQuery({
     page,
     limit: PAGINATION_LIMIT_COUNT.users_limit,
   });
@@ -58,7 +58,7 @@ export const AllUsers = () => {
 
       <div className={"flex flex-wrap gap-4"}>
         {filteredUsers?.map((user: IUser) => (
-          <UserProfile user={user} key={user._id} />
+          <UserProfile user={user} key={user._id} refetch={refetch} />
         ))}
       </div>
 
