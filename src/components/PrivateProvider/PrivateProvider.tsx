@@ -33,7 +33,7 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
     }
   }, [isAuth, userData]);
 
-  if (isAuth && (isLoading || !userDataToFix)) return <div>Loading...</div>;
+  if (isAuth && isLoading) return <div>Loading...</div>;
 
   return <>{children}</>;
 };

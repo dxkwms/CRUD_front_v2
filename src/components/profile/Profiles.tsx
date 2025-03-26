@@ -20,6 +20,7 @@ import { usePaginateData } from "@/hooks/common/usePaginateData";
 import { useScrollListener } from "@/hooks/dom/useScrollListener";
 import { isElementAtBottomOfPage } from "@/utils/isElementAtBottomOfPage";
 import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
+import { NotificationBar } from "@/components/notifications/NotificationBar";
 
 export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -166,6 +167,8 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
           <ProfileFilter onFilterChange={onFilterChange} />
         </div>
       )}
+
+      <NotificationBar userId={userData?._id} />
 
       <div className={"flex self-center"}>
         {isCreateNewProfileFormVisible && (
