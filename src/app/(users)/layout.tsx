@@ -11,6 +11,9 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   const [isProfileActive, setIsProfileActive] = useState(true);
+  const [isUsersActive, setIsUsersActive] = useState(false);
+  const [isDashboardActive, setIsDashboardActive] = useState(false);
+
   const userData = useSelector((state: RootState) => state.user.user);
 
   return (
@@ -24,7 +27,11 @@ export default function ProfileLayout({
         avatar={userData?.avatar}
         name={userData?.name}
         setIsProfileActive={setIsProfileActive}
+        setIsUsersActive={setIsUsersActive}
         isProfileActive={isProfileActive}
+        setIsDashboardActive={setIsDashboardActive}
+        isDashboardActive={isDashboardActive}
+        isUsersActive={isUsersActive}
       />
       {children}
     </div>

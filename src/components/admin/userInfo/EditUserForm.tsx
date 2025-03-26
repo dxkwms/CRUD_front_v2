@@ -7,6 +7,7 @@ import { Typography } from "@/components/common/Typography";
 import { ProfileField } from "@/components/common/ProfileField";
 import { Avatar } from "@/components/common/Avatar";
 import { CommonButton } from "@/components/common/CommonButton";
+import { AdminCheckboxField } from "@/components/common/AdminCheckboxField";
 
 interface IProps {
   userData: IUser;
@@ -20,8 +21,6 @@ export const EditUserForm = ({
   setIsUserEditOpen,
   updateUserError,
 }: IProps) => {
-  const [avatar, setAvatar] = useState<File | null>(null);
-
   const wrapperRef = useRef(null);
   useOutsideDetect({
     ref: wrapperRef,
@@ -68,6 +67,10 @@ export const EditUserForm = ({
               placeholder={values.email}
               name="email"
               onChange={handleChange}
+            />
+            <AdminCheckboxField
+              setFieldValue={setFieldValue}
+              role={values.role}
             />
             <div className={"flex justify-between mt-2"}>
               <CommonButton

@@ -66,7 +66,12 @@ export const usersApi = createApi({
     }),
 
     getUserProfiles: builder.query<
-      { profiles: IProfile[]; totalPages: number; currentPage: number },
+      {
+        profiles: IProfile[];
+        totalProfiles: number;
+        totalPages: number;
+        currentPage: number;
+      },
       { userId: string; page: number; limit: number }
     >({
       query: ({ userId, page, limit }) => ({

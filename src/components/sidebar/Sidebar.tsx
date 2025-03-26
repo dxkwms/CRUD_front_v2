@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { LogoutButton } from "@/components/sidebar/LogoutButton";
 import { Typography } from "@/components/common/Typography";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Role } from "@/types/IUser";
 
 interface IProps {
@@ -11,7 +11,11 @@ interface IProps {
   id?: string;
   role?: Role;
   isProfileActive: boolean;
+  isUsersActive: boolean;
+  isDashboardActive: boolean;
   setIsProfileActive: Dispatch<SetStateAction<boolean>>;
+  setIsUsersActive: Dispatch<SetStateAction<boolean>>;
+  setIsDashboardActive: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Sidebar = ({
@@ -21,8 +25,19 @@ export const Sidebar = ({
   id,
   setIsProfileActive,
   isProfileActive,
+  isDashboardActive,
+  setIsUsersActive,
+  setIsDashboardActive,
+  isUsersActive,
 }: IProps) => {
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsProfileActive(pathname.includes("profiles"));
+    setIsUsersActive(pathname.includes("users"));
+    setIsDashboardActive(pathname.includes("dashboard"));
+  }, [pathname, setIsProfileActive, setIsUsersActive, setIsDashboardActive]);
 
   return (
     <div
@@ -42,7 +57,7 @@ export const Sidebar = ({
           <div className={"text-textWhite"}>{name}</div>
         </div>
         <div
-          className="w-full px-4 py-2 text-textWhite cursor-pointer flex items-center mt-5"
+          className={`w-full px-4 py-2 cursor-pointer flex items-center mt-5 ${isProfileActive ? "bg-buttonColor" : "text-textWhite"}`}
           onClick={() => router.push(`/${role}/${id}/profiles`)}
         >
           <Image
@@ -59,7 +74,7 @@ export const Sidebar = ({
         {role === Role.Admin && (
           <>
             <div
-              className="w-full px-4 py-2 text-textWhite cursor-pointer flex items-center mt-5"
+              className={`w-full px-4 py-2 cursor-pointer flex items-center mt-5 ${isUsersActive ? "bg-buttonColor" : "text-textWhite"}`}
               onClick={() => router.push(`/${role}/${id}/users`)}
             >
               <Image
@@ -74,7 +89,7 @@ export const Sidebar = ({
               </Typography>
             </div>
             <div
-              className="w-full px-4 py-2 text-textWhite cursor-pointer flex items-center mt-5"
+              className={`w-full px-4 py-2 cursor-pointer flex items-center mt-5 ${isDashboardActive ? "bg-buttonColor" : "text-textWhite"}`}
               onClick={() => router.push(`/${role}/${id}/dashboard`)}
             >
               <Image

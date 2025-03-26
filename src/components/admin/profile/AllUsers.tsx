@@ -18,11 +18,6 @@ export const AllUsers = () => {
   const isFetchingRef = useRef(isFetching);
   isFetchingRef.current = isFetching;
 
-  const paginatedData = usePaginateData({
-    data: data?.users,
-    page,
-  });
-
   const onPageChange = (newPage: number) => {
     if (newPage > 0) {
       setPage(newPage);
@@ -30,16 +25,15 @@ export const AllUsers = () => {
   };
 
   const paginatedItemsPrepared = useMemo(
-    () =>
-      paginatedData?.filter(Boolean) as Array<
-        NonNullable<(typeof paginatedData)[number]>
-      >,
-    [paginatedData],
+    () => data?.users?.filter(Boolean),
+    [data?.users],
   );
 
   const filterUsers = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchUserByEmail(e.target.value);
   };
+
+  const totalPages = data?.totalPages || 1;
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading users</p>;
@@ -56,7 +50,7 @@ export const AllUsers = () => {
         filterText={"Search by email"}
       />
 
-      <div className={"flex flex-wrap gap-4"}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {filteredUsers?.map((user: IUser) => (
           <UserProfile user={user} key={user._id} refetch={refetch} />
         ))}
@@ -70,11 +64,18 @@ export const AllUsers = () => {
         >
           &lt;
         </button>
-        <span>Page {page}</span>
+        <span>
+          {page} ... {totalPages}
+        </span>
         <button
           className="p-2 bg-gray-300 rounded-full hover:bg-gray-400 disabled:opacity-50"
           onClick={() => onPageChange(page + 1)}
-          disabled={isFetching || !data?.users || data.users.length === 0}
+          disabled={
+            isFetching ||
+            !data?.users ||
+            data.users.length === 0 ||
+            page === totalPages
+          }
         >
           &gt;
         </button>

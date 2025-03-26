@@ -22,9 +22,12 @@ export const UserProfile = ({
   const [deleteUser] = useDeleteUserMutation();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetUserProfilesQuery(user?._id, {
-    skip: !user?._id,
-  });
+  const { data, isLoading } = useGetUserProfilesQuery(
+    { userId: user?._id, page: 1, limit: 10 },
+    {
+      skip: !user?._id,
+    },
+  );
 
   const router = useRouter();
 
@@ -68,7 +71,7 @@ export const UserProfile = ({
         <Typography>{user.name}</Typography>
         <Typography>{user.email}</Typography>
         <Typography className={"text-buttonColor"}>
-          Profiles {data?.profiles.length}
+          Profiles {data?.totalProfiles}
         </Typography>
 
         {isHover === user._id && (
