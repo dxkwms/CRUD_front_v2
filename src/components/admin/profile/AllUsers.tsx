@@ -5,14 +5,20 @@ import { UserProfile } from "@/components/admin/profile/UserProfile";
 import { ChangeEvent, useMemo, useRef, useState } from "react";
 import { FilterInput } from "@/common/FilterInput";
 import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
-import { usePaginateData } from "@/hooks/common/usePaginateData";
+import { PaginationController } from "@/components/pagination/PaginationController";
+import { useDebounce } from "@/hooks/common/useDebounce";
 
 export const AllUsers = () => {
   const [searchUserByEmail, setSearchUserByEmail] = useState<string>("");
   const [page, setPage] = useState(1);
+  const debouncedValue = useDebounce({ value: searchUserByEmail, delay: 500 });
+
+  const searchQuery = debouncedValue.length >= 3 ? debouncedValue : "";
+
   const { data, error, isLoading, isFetching, refetch } = useGetAllUsersQuery({
     page,
     limit: PAGINATION_LIMIT_COUNT.users_limit,
+    searchEmail: searchQuery,
   });
 
   const isFetchingRef = useRef(isFetching);
@@ -56,30 +62,13 @@ export const AllUsers = () => {
         ))}
       </div>
 
-      <div className="flex justify-center items-center gap-2 mt-4">
-        <button
-          className="p-2 bg-gray-300 rounded-full hover:bg-gray-400 disabled:opacity-50"
-          onClick={() => onPageChange(page - 1)}
-          disabled={page === 1}
-        >
-          &lt;
-        </button>
-        <span>
-          {page} ... {totalPages}
-        </span>
-        <button
-          className="p-2 bg-gray-300 rounded-full hover:bg-gray-400 disabled:opacity-50"
-          onClick={() => onPageChange(page + 1)}
-          disabled={
-            isFetching ||
-            !data?.users ||
-            data.users.length === 0 ||
-            page === totalPages
-          }
-        >
-          &gt;
-        </button>
-      </div>
+      <PaginationController
+        data={data}
+        isFetching={isFetching}
+        onPageChange={onPageChange}
+        page={page}
+        totalPages={totalPages}
+      />
     </div>
   );
 };

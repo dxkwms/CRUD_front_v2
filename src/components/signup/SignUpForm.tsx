@@ -13,7 +13,7 @@ import { errorsText } from "@/common/errorsText";
 import Link from "next/link";
 import { ROUTES } from "@/types/routesEnum";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
-import { AdminCheckboxField } from "@/components/common/AdminCheckboxField";
+import { RoleField } from "@/components/common/RoleField";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -124,10 +124,17 @@ export const SignUpForm = () => {
               {errors.name && touched.name && <div>{errors.name}</div>}
 
               <div className="flex items-center">
-                <AdminCheckboxField
-                  setFieldValue={setFieldValue}
-                  role={values.role}
-                />
+                <RoleField
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setFieldValue(
+                      "role",
+                      e.target.checked ? Role.Admin : Role.User,
+                    );
+                  }}
+                  isChecked={values.role === Role.Admin}
+                >
+                  Admin
+                </RoleField>
               </div>
 
               <CommonButton

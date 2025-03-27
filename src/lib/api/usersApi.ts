@@ -24,11 +24,11 @@ export const usersApi = createApi({
 
     getAllUsers: builder.query<
       { users: IUser[]; totalPages: number; currentPage: number },
-      { page: number; limit: number }
+      { page: number; limit: number; searchEmail: string }
     >({
-      query: ({ page, limit }) => ({
+      query: ({ page, limit, searchEmail }) => ({
         url: `/users/`,
-        params: { page, limit },
+        params: { page, limit, searchEmail },
       }),
     }),
 
