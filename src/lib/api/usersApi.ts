@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IProfile, IUser } from "@/types/IUser";
+import {FILTERS} from "@/types/filtersEnum";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
@@ -72,11 +73,11 @@ export const usersApi = createApi({
         totalPages: number;
         currentPage: number;
       },
-      { userId: string; page: number; limit: number }
+      { userId: string; page: number; limit: number, searchFilter: string, filterType: FILTERS | null }
     >({
-      query: ({ userId, page, limit }) => ({
+      query: ({ userId, page, limit, searchFilter, filterType }) => ({
         url: `profiles/${userId}`,
-        params: { page, limit },
+        params: { page, limit, searchFilter,  filterType },
       }),
     }),
 
