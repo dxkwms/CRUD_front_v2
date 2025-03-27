@@ -4,6 +4,7 @@ import { LogoutButton } from "@/components/sidebar/LogoutButton";
 import { Typography } from "@/components/common/Typography";
 import { useRouter, usePathname } from "next/navigation";
 import { Role } from "@/types/IUser";
+import { SidebarNavigationButton } from "@/components/sidebar/SidebarNavigationButton";
 
 interface IProps {
   avatar?: string;
@@ -56,53 +57,26 @@ export const Sidebar = ({
           />
           <div className={"text-textWhite"}>{name}</div>
         </div>
-        <div
-          className={`w-full px-4 py-2 cursor-pointer flex items-center mt-5 ${isProfileActive ? "bg-buttonColor" : "text-textWhite"}`}
-          onClick={() => router.push(`/${role}/${id}/profiles`)}
+        <SidebarNavigationButton
+          isUsersActive={isProfileActive}
+          clickEvent={() => router.push(`/${role}/${id}/profiles`)}
         >
-          <Image
-            src="/img/sidebarProfileIcon.svg"
-            alt={""}
-            width={30}
-            height={29}
-            className={"mr-4"}
-          />
-          <Typography variant={"h3"} className={"text-textWhite"}>
-            Profile
-          </Typography>
-        </div>
+          Profiles
+        </SidebarNavigationButton>
         {role === Role.Admin && (
           <>
-            <div
-              className={`w-full px-4 py-2 cursor-pointer flex items-center mt-5 ${isUsersActive ? "bg-buttonColor" : "text-textWhite"}`}
-              onClick={() => router.push(`/${role}/${id}/users`)}
+            <SidebarNavigationButton
+              isUsersActive={isUsersActive}
+              clickEvent={() => router.push(`/${role}/${id}/users`)}
             >
-              <Image
-                src="/img/usersIcon.svg"
-                alt=""
-                width={30}
-                height={29}
-                className="mr-4"
-              />
-              <Typography variant="h3" className="text-textWhite">
-                Users
-              </Typography>
-            </div>
-            <div
-              className={`w-full px-4 py-2 cursor-pointer flex items-center mt-5 ${isDashboardActive ? "bg-buttonColor" : "text-textWhite"}`}
-              onClick={() => router.push(`/${role}/${id}/dashboard`)}
+              Users
+            </SidebarNavigationButton>
+            <SidebarNavigationButton
+              isUsersActive={isDashboardActive}
+              clickEvent={() => router.push(`/${role}/${id}/dashboard`)}
             >
-              <Image
-                src="/img/dashboardIcon.svg"
-                alt=""
-                width={30}
-                height={29}
-                className="mr-4"
-              />
-              <Typography variant="h3" className="text-textWhite">
-                Dashboard
-              </Typography>
-            </div>
+              Dashboard
+            </SidebarNavigationButton>
           </>
         )}
       </div>

@@ -1,5 +1,5 @@
-import { IUser } from "@/types/IUser";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { IUser, Role } from "@/types/IUser";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
 import { FormWrapper } from "@/common/FormWrapper";
 import { Form, Formik } from "formik";
@@ -7,7 +7,7 @@ import { Typography } from "@/components/common/Typography";
 import { ProfileField } from "@/components/common/ProfileField";
 import { Avatar } from "@/components/common/Avatar";
 import { CommonButton } from "@/components/common/CommonButton";
-import { AdminCheckboxField } from "@/components/common/AdminCheckboxField";
+import { RoleField } from "@/components/common/RoleField";
 
 interface IProps {
   userData: IUser;
@@ -68,10 +68,17 @@ export const EditUserForm = ({
               name="email"
               onChange={handleChange}
             />
-            <AdminCheckboxField
-              setFieldValue={setFieldValue}
-              role={values.role}
-            />
+            <RoleField
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue(
+                  "role",
+                  e.target.checked ? Role.Admin : Role.User,
+                );
+              }}
+              isChecked={values.role === Role.Admin}
+            >
+              Admin
+            </RoleField>
             <div className={"flex justify-between mt-2"}>
               <CommonButton
                 className={"w-1/3"}
