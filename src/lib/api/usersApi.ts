@@ -47,13 +47,15 @@ export const usersApi = createApi({
       query: ({
         userId,
         updateData,
+        adminName,
       }: {
-        userId: string;
+        userId?: string;
+        adminName?: string;
         updateData: IUser;
       }) => ({
         url: `users/${userId}`,
         method: "PUT",
-        body: updateData,
+        body: { updateData, adminName },
       }),
     }),
 

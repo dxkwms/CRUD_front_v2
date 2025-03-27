@@ -9,9 +9,11 @@ const EditUserPage = () => {
     (state: RootState) => state.userForEdit.user,
   );
 
+  const adminData = useSelector((state: RootState) => state.user.user);
+
   return (
     <div className={"flex flex-col w-full"}>
-      <UserInfo userData={userForEditData} />
+      <UserInfo userData={userForEditData} adminName={adminData?.name} />
       <Profiles userData={userForEditData} />
     </div>
   );

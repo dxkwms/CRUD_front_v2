@@ -3,4 +3,5 @@ export interface INotification {
   message: string;
   changes: object;
   read: boolean;
+  updatedBy: string;
 }

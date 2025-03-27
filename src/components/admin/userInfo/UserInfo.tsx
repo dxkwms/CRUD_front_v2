@@ -13,11 +13,17 @@ import { ConfirmDelete } from "@/components/common/ConfirmDelete";
 import { EditUserForm } from "@/components/admin/userInfo/EditUserForm";
 import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 
-export const UserInfo = ({ userData }: { userData: IUser | null }) => {
+export const UserInfo = ({
+  userData,
+  adminName,
+}: {
+  userData: IUser | null;
+  adminName?: string;
+}) => {
   const [updateUserError, setUpdateUserError] = useState("");
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [isEditUserFormOpen, setIsEditUserFormOpen] = useState(false);
-  const { refetch } = useGetAllUsersQuery();
+  const { refetch } = useGetAllUsersQuery({ page: 1, limit: 10 });
   const [editUser] = useEditUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [addAvatar] = useAddAvatarMutation();
@@ -43,7 +49,11 @@ export const UserInfo = ({ userData }: { userData: IUser | null }) => {
         updatedValues.avatar = userData?.avatar;
       }
 
-      await editUser({ userId: userData?._id, updateData: updatedValues });
+      await editUser({
+        adminName: adminName,
+        userId: userData?._id,
+        updateData: updatedValues,
+      });
     } catch (error) {
       console.error("Error of add user:", error);
       setUpdateUserError("Error of update user");

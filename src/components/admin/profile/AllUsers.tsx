@@ -2,10 +2,9 @@
 import { useGetAllUsersQuery } from "@/lib/api/usersApi";
 import { IUser } from "@/types/IUser";
 import { UserProfile } from "@/components/admin/profile/UserProfile";
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { FilterInput } from "@/common/FilterInput";
 import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
-import { usePaginateData } from "@/hooks/common/usePaginateData";
 
 export const AllUsers = () => {
   const [searchUserByEmail, setSearchUserByEmail] = useState<string>("");
@@ -24,11 +23,6 @@ export const AllUsers = () => {
     }
   };
 
-  const paginatedItemsPrepared = useMemo(
-    () => data?.users?.filter(Boolean),
-    [data?.users],
-  );
-
   const filterUsers = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchUserByEmail(e.target.value);
   };
@@ -38,7 +32,7 @@ export const AllUsers = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading users</p>;
 
-  const filteredUsers = paginatedItemsPrepared?.filter((user: IUser) =>
+  const filteredUsers = data?.users?.filter((user: IUser) =>
     user.email.toLowerCase().includes(searchUserByEmail.toLowerCase()),
   );
 
