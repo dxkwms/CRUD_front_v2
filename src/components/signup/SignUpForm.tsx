@@ -13,6 +13,7 @@ import { errorsText } from "@/common/errorsText";
 import Link from "next/link";
 import { ROUTES } from "@/types/routesEnum";
 import { ErrorComponent } from "@/components/error/ErrorComponent";
+import { RoleField } from "@/components/common/RoleField";
 
 export const SignUpForm = () => {
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -34,7 +35,7 @@ export const SignUpForm = () => {
       const formData = new FormData();
       formData.append("file", avatar);
 
-      const response = await addAvatar({ formData, avatar }).unwrap();
+      const response = await addAvatar({ avatar }).unwrap();
 
       if (!response.url) {
         setFieldError("avatar", errorsText.avatarUpload);
@@ -123,22 +124,17 @@ export const SignUpForm = () => {
               {errors.name && touched.name && <div>{errors.name}</div>}
 
               <div className="flex items-center">
-                <Field
-                  type="checkbox"
-                  name="role"
-                  id="admin"
-                  className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
+                <RoleField
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setFieldValue(
                       "role",
                       e.target.checked ? Role.Admin : Role.User,
                     );
                   }}
-                  checked={values.role === Role.Admin}
-                />
-                <label htmlFor="admin" className="ml-2 text-gray-400">
+                  isChecked={values.role === Role.Admin}
+                >
                   Admin
-                </label>
+                </RoleField>
               </div>
 
               <CommonButton

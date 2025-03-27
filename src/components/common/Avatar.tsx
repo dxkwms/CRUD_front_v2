@@ -9,6 +9,7 @@ interface Props {
 
 export const Avatar = ({ avatar, setAvatar }: Props) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
+
   const onAvatarClick = () => {
     if (!inputFileRef.current) {
       return;
@@ -38,7 +39,9 @@ export const Avatar = ({ avatar, setAvatar }: Props) => {
           <div className="cursor-pointer">
             <Image
               src={
-                avatar ? URL.createObjectURL(avatar) : "/img/defaultAvatar.png"
+                avatar instanceof File
+                  ? URL.createObjectURL(avatar)
+                  : avatar || "/img/defaultAvatar.png"
               }
               alt="Avatar"
               className="object-cover"

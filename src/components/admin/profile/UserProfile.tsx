@@ -11,16 +11,23 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUserForEdit } from "@/lib/slice/userForEditSlice";
 
-export const UserProfile = ({ user }: { user: IUser }) => {
+export const UserProfile = ({
+  user,
+  refetch,
+}: {
+  user: IUser;
+  refetch: () => void;
+}) => {
   const [isHover, setIsHover] = useState<string | null>(null);
   const [deleteUser] = useDeleteUserMutation();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
   const dispatch = useDispatch();
-  const { data, isLoading } = useGetUserProfilesQuery(user?._id, {
-    skip: !user?._id,
-  });
+  const { data, isLoading } = useGetUserProfilesQuery(
+    { userId: user?._id, page: 1, limit: 10 },
+    {
+      skip: !user?._id,
+    },
+  );
 
   const router = useRouter();
 
@@ -31,7 +38,9 @@ export const UserProfile = ({ user }: { user: IUser }) => {
 
   const onUserDelete = async (profileId: string) => {
     try {
-      await deleteUser(profileId);
+      await deleteUser(profileId).finally(() => {
+        refetch();
+      });
       setIsConfirmOpen(false);
     } catch (error) {
       console.log("Error deleting profile:", error);
@@ -57,28 +66,27 @@ export const UserProfile = ({ user }: { user: IUser }) => {
           alt={"/"}
           width={"50"}
           height={"50"}
-          unoptimized={true}
+          className={"rounded-full object-cover"}
         />
         <Typography>{user.name}</Typography>
         <Typography>{user.email}</Typography>
         <Typography className={"text-buttonColor"}>
-          Profiles {data?.length}
+          Profiles {data?.totalProfiles}
         </Typography>
 
         {isHover === user._id && (
-          <div className="absolute top-0 bottom-0 left-0 w-full flex justify-between border rounded-3xl ">
+          <div className="absolute top-0 bottom-0 left-0 w-full flex justify-between border rounded-xl ">
             <button
               onClick={() => onUserEdit(user)}
-              className="bg-editButtonColor text-formBackground p-2 rounded-l-3xl hover:bg-textWhite transition w-1/2"
+              className="bg-editButtonColor text-formBackground p-2 rounded-l-xl hover:bg-textWhite transition w-1/2"
             >
               Edit
             </button>
             <button
               onClick={() => {
-                setSelectedUserId(user._id);
                 setIsConfirmOpen(true);
               }}
-              className="bg-buttonColor text-formBackground p-2 rounded-r-3xl hover:bg-textWhite transition w-1/2"
+              className="bg-buttonColor text-formBackground p-2 rounded-r-xl hover:bg-textWhite transition w-1/2"
             >
               Delete
             </button>
@@ -87,8 +95,8 @@ export const UserProfile = ({ user }: { user: IUser }) => {
       </div>
       {isConfirmOpen && (
         <ConfirmDelete
+          deleteEntityName={"user"}
           onEntityDelete={onUserDelete}
-          selectedId={selectedUserId}
           setIsConfirmOpen={setIsConfirmOpen}
         />
       )}

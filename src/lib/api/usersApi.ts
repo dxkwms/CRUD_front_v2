@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IUser } from "@/types/IUser";
+import { IProfile, IUser } from "@/types/IUser";
+import {FILTERS} from "@/types/filtersEnum";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
@@ -22,8 +23,14 @@ export const usersApi = createApi({
       }),
     }),
 
-    getAllUsers: builder.query<IUser, void>({
-      query: () => `/users/`,
+    getAllUsers: builder.query<
+      { users: IUser[]; totalPages: number; currentPage: number },
+      { page: number; limit: number; searchEmail: string }
+    >({
+      query: ({ page, limit, searchEmail }) => ({
+        url: `/users/`,
+        params: { page, limit, searchEmail },
+      }),
     }),
 
     createUser: builder.mutation({
@@ -42,9 +49,16 @@ export const usersApi = createApi({
     }),
 
     editUser: builder.mutation({
-      query: (userId: string) => ({
+      query: ({
+        userId,
+        updateData,
+      }: {
+        userId: string;
+        updateData: IUser;
+      }) => ({
         url: `users/${userId}`,
         method: "PUT",
+        body: updateData,
       }),
     }),
 
@@ -52,8 +66,19 @@ export const usersApi = createApi({
       query: () => `profiles/`,
     }),
 
-    getUserProfiles: builder.query({
-      query: (userId) => `profiles/${userId}`,
+    getUserProfiles: builder.query<
+      {
+        profiles: IProfile[];
+        totalProfiles: number;
+        totalPages: number;
+        currentPage: number;
+      },
+      { userId: string; page: number; limit: number, searchFilter: string, filterType: FILTERS | null }
+    >({
+      query: ({ userId, page, limit, searchFilter, filterType }) => ({
+        url: `profiles/${userId}`,
+        params: { page, limit, searchFilter,  filterType },
+      }),
     }),
 
     addProfile: builder.mutation({
@@ -91,4 +116,5 @@ export const {
   useUpdateProfileMutation,
   useGetAllUsersQuery,
   useDeleteUserMutation,
+  useEditUserMutation,
 } = usersApi;

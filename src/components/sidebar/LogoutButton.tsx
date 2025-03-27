@@ -15,7 +15,7 @@ export const LogoutButton = () => {
   return (
     <button
       onClick={onLogout}
-      className="w-1/5 text-white font-light rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 mb-5 ml-5"
+      className="bottom-0 text-white font-light rounded-lg focus:outline-none focus:ring-2 focus:ring-red-700 mb-5 ml-5 fixed pl-2 pr-2 "
     >
       <Typography variant={"h6"} className="text-amber-50 font-bold">
         Log Out
