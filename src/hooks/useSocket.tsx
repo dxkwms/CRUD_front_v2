@@ -5,6 +5,7 @@ import { useGetUserNotificationsQuery } from "@/lib/api/usersApi";
 import { INotification } from "@/types/INotification";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/lib/slice/userSlice";
+import { formatChange } from "@/utils/formatChange";
 
 const socket = io(
   process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001",
@@ -31,7 +32,7 @@ export const useSocket = (userId: string | undefined) => {
       ...prev,
       ...notificationsData.map(
         (n: INotification) =>
-          `🔔 ${n.message}: ${JSON.stringify(n.changes)} Updated by: ${n.updatedBy}`,
+          `🔔 ${n.message}: ${formatChange(n.changes)} Updated by: ${n.updatedBy}`,
       ),
     ]);
   }, [notificationsData]);
@@ -47,7 +48,7 @@ export const useSocket = (userId: string | undefined) => {
     }) => {
       setNotifications((prev) => [
         ...prev,
-        `🔔 ${data.message}: ${JSON.stringify(data.changes)} Updated by: ${data.updatedBy}`,
+        `🔔 ${data.message}: ${formatChange(data.changes)} Updated by: ${data.updatedBy}`,
       ]);
 
       if (data.user) {

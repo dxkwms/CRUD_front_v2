@@ -23,7 +23,11 @@ export const UserInfo = ({
   const [updateUserError, setUpdateUserError] = useState("");
   const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
   const [isEditUserFormOpen, setIsEditUserFormOpen] = useState(false);
-  const { refetch } = useGetAllUsersQuery({ page: 1, limit: 10 });
+  const { refetch } = useGetAllUsersQuery({
+    page: 1,
+    limit: 10,
+    searchEmail: "",
+  });
   const [editUser] = useEditUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [addAvatar] = useAddAvatarMutation();
@@ -37,7 +41,7 @@ export const UserInfo = ({
       refetch();
     }
   };
-
+  console.log(userData);
   const onUserEdit = async (updatedValues) => {
     try {
       if (updatedValues.avatar instanceof File) {
