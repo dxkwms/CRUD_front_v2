@@ -17,7 +17,7 @@ export const AdminCheckboxField = ({ setFieldValue, role }: Props) => {
         type="checkbox"
         name="role"
         id="admin"
-        className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700"
+        className="h-4 w-4 text-red-700 border-gray-800 focus:ring-red-700 mt-3"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setFieldValue("role", e.target.checked ? Role.Admin : Role.User);
         }}

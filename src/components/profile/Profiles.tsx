@@ -147,7 +147,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   if (isLoading) return <>Loading</>;
 
   return (
-    <div>
+    <div className={"ml-5"}>
       <Typography
         variant={"h2"}
         className={`${pathname.split("/")[1] === "user" && " flex justify-self-center"} mb-5`}
@@ -219,7 +219,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
               setIsCreateNewProfileFormVisible((prevState) => !prevState)
             }
             className={
-              "cursor-pointer border-amber-50 border-2 w-56 h-64 bg-formBackground flex flex-col items-center justify-center self-center rounded-2xl opacity-90 text-textWhite"
+              "cursor-pointer border-amber-50 w-56 h-64 bg-formBackground flex flex-col items-center justify-center self-center rounded-2xl opacity-90 text-textWhite"
             }
           >
             <Image

@@ -56,7 +56,7 @@ export const UserInfo = ({ userData }: { userData: IUser | null }) => {
   return (
     <section
       className={
-        "self-center bg-[#242420] rounded-xl w-1/2 items-center flex justify-center flex-col h-1/2 gap-4"
+        "self-center bg-[#242420] rounded-xl w-1/2 items-center flex justify-center flex-col h-1/2 gap-4 pb-10 pt-10 mt-10"
       }
     >
       <Image

@@ -7,10 +7,6 @@ export const usersApi = createApi({
     baseUrl: `${process.env.NEXT_PUBLIC_DATABASE_URL}/`,
   }),
   endpoints: (builder) => ({
-    getUserById: builder.query<IUser, string>({
-      query: (id) => `users/${id}`,
-    }),
-
     getUserByToken: builder.query({
       query: (accessToken) => ({
         url: "auth/user",
@@ -102,13 +98,17 @@ export const usersApi = createApi({
         method: "DELETE",
       }),
     }),
+
+    getUserNotifications: builder.query({
+      query: ({ userId }) => `notifications/${userId}`,
+    }),
   }),
 });
 
 export const {
-  useGetUserByIdQuery,
   useGetUserProfilesQuery,
   useGetUserByTokenQuery,
+  useGetUserNotificationsQuery,
   useCreateUserMutation,
   useAddProfileMutation,
   useDeleteProfileMutation,

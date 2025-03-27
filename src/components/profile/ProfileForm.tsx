@@ -42,7 +42,7 @@ export const ProfileForm = ({
     <>
       <div
         key={profile._id}
-        className="mr-10 relative rounded-3xl border p-1 bg-formBackground text-textWhite w-56 opacity-95 shadow-[1px_4px_6px_0px_rgba(0,_0,_0,_0.1)]"
+        className="mr-10 relative rounded-3xl bg-[#12130FEB] text-textWhite w-56 shadow-[1px_4px_6px_0px_rgba(0,_0,_0,_0.1)]"
         onMouseEnter={() => setIsHover(profile._id)}
         onMouseLeave={() => setIsHover(null)}
       >
@@ -86,7 +86,7 @@ export const ProfileForm = ({
         </div>
 
         {isHover === profile._id && (
-          <div className="absolute top-0 bottom-0 left-0 w-full flex justify-between border rounded-3xl ">
+          <div className="absolute top-0 bottom-0 left-0 w-full flex justify-between rounded-3xl shadow-[1px_4px_6px_0px_rgba(0,_0,_0,_0.1)]">
             <button
               onClick={() => onProfileEdit(profile)}
               className="bg-editButtonColor text-formBackground p-2 rounded-l-3xl hover:bg-textWhite transition w-1/2"
