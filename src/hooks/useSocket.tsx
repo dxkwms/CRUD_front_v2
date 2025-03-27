@@ -12,7 +12,9 @@ const socket = io(
 );
 
 export const useSocket = (userId: string | undefined) => {
-  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<
+    { message: string; isRead: boolean; date: string }[]
+  >([]);
   const dispatch = useDispatch();
   const { data: notificationsData } = useGetUserNotificationsQuery({ userId });
 
@@ -30,10 +32,11 @@ export const useSocket = (userId: string | undefined) => {
     if (!notificationsData) return;
     setNotifications((prev) => [
       ...prev,
-      ...notificationsData.map(
-        (n: INotification) =>
-          `🔔 ${n.message}: ${formatChange(n.changes)} Updated by: ${n.updatedBy}`,
-      ),
+      ...notificationsData.map((n: INotification) => ({
+        message: `🔔 ${n.message}: ${formatChange(n.changes)} Updated by: ${n.updatedBy}`,
+        isRead: n.read,
+        date: n.createdAt,
+      })),
     ]);
   }, [notificationsData]);
 
@@ -45,10 +48,15 @@ export const useSocket = (userId: string | undefined) => {
       changes: object;
       user: IUser;
       updatedBy: string;
+      createdAt: string;
     }) => {
       setNotifications((prev) => [
         ...prev,
-        `🔔 ${data.message}: ${formatChange(data.changes)} Updated by: ${data.updatedBy}`,
+        {
+          message: `🔔 ${data.message}: ${formatChange(data.changes)} Updated by: ${data.updatedBy}`,
+          isRead: false,
+          date: data.createdAt,
+        },
       ]);
 
       if (data.user) {
@@ -63,5 +71,17 @@ export const useSocket = (userId: string | undefined) => {
     };
   }, [dispatch, userId]);
 
-  return { notifications };
+  const markAsRead = (index: number) => {
+    setNotifications((prev) => {
+      const newNotifications = [...prev];
+      newNotifications[index].isRead = true;
+      return newNotifications;
+    });
+  };
+
+  const sortedNotifications = notifications.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+
+  return { sortedNotifications, markAsRead };
 };

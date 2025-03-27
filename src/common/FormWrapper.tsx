@@ -10,7 +10,7 @@ export const FormWrapper = ({
 }: PropsWithChildren<IProps>) => {
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20 ${className}`}
+      className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20`}
     >
       {children}
     </div>

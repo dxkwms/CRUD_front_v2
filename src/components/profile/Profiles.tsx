@@ -12,7 +12,6 @@ import {
 import { useAddAvatarMutation } from "@/lib/api/avatarApi";
 import { FilterInput } from "@/common/FilterInput";
 import { ProfileFilter } from "@/components/admin/profile/ProfileFIlter";
-import { useFilteredProfiles } from "@/hooks/useFiltredProfiles";
 import { FILTERS } from "@/types/filtersEnum";
 import { Typography } from "@/components/common/Typography";
 import { usePathname } from "next/navigation";
@@ -21,6 +20,7 @@ import { useScrollListener } from "@/hooks/dom/useScrollListener";
 import { isElementAtBottomOfPage } from "@/utils/isElementAtBottomOfPage";
 import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
 import { NotificationBar } from "@/components/notifications/NotificationBar";
+import { useDebounce } from "@/hooks/common/useDebounce";
 
 export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isCreateNewProfileFormVisible, setIsCreateNewProfileFormVisible] =
@@ -33,12 +33,15 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [avatar, setAvatar] = useState<File | null>(null);
   const pathname = usePathname();
 
+  const debouncedValue = useDebounce({ value: filterQuery, delay: 500 });
+  const searchQuery = debouncedValue.length >= 3 ? debouncedValue : "";
+
   const { data, isLoading, isFetching, refetch } = useGetUserProfilesQuery({
     userId: userData?._id!,
     page,
     limit: PAGINATION_LIMIT_COUNT.profiles_limit,
     filterType: selectedFilter,
-    searchFilter: filterQuery
+    searchFilter: searchQuery,
   });
 
   const isFetchingRef = useRef(isFetching);
@@ -122,6 +125,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const onFilterChange = (filterType: FILTERS) => {
     setSelectedFilter(filterType);
     setFilterQuery("");
+    setPage(1);
   };
 
   const scrollHandler = useCallback(() => {
@@ -188,8 +192,8 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
         )}
 
         <div className={"flex flex-wrap gap-2"}>
-          {data?.profiles ? (
-              data?.profiles?.map((profile: IProfile) => (
+          {paginatedData ? (
+            paginatedData?.map((profile: IProfile) => (
               <ProfileForm
                 refetch={refetch}
                 key={profile._id}
