@@ -30,11 +30,6 @@ export const AllUsers = () => {
     }
   };
 
-  const paginatedItemsPrepared = useMemo(
-    () => data?.users?.filter(Boolean),
-    [data?.users],
-  );
-
   const filterUsers = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchUserByEmail(e.target.value);
   };
@@ -44,9 +39,6 @@ export const AllUsers = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading users</p>;
 
-  const filteredUsers = paginatedItemsPrepared?.filter((user: IUser) =>
-    user.email.toLowerCase().includes(searchUserByEmail.toLowerCase()),
-  );
 
   return (
     <div>
@@ -57,7 +49,7 @@ export const AllUsers = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {filteredUsers?.map((user: IUser) => (
+        {data?.users?.map((user: IUser) => (
           <UserProfile user={user} key={user._id} refetch={refetch} />
         ))}
       </div>

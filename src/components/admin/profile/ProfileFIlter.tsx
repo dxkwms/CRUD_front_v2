@@ -4,7 +4,7 @@ import { FILTERS } from "@/types/filtersEnum";
 import { CommonButton } from "@/components/common/CommonButton";
 
 interface IProps {
-  onFilterChange: (filterType: string) => void;
+  onFilterChange: (filterType: FILTERS) => void;
 }
 
 export const ProfileFilter = ({ onFilterChange }: IProps) => {

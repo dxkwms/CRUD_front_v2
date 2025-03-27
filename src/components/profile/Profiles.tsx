@@ -28,7 +28,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const [isEditFormVisible, setIsEditFormVisible] = useState(false);
   const [currentProfile, setCurrentProfile] = useState<IProfile | null>(null);
   const [filterQuery, setFilterQuery] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<FILTERS | null>(null);
   const [page, setPage] = useState(1);
   const [avatar, setAvatar] = useState<File | null>(null);
   const pathname = usePathname();
@@ -37,6 +37,8 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
     userId: userData?._id!,
     page,
     limit: PAGINATION_LIMIT_COUNT.profiles_limit,
+    filterType: selectedFilter,
+    searchFilter: filterQuery
   });
 
   const isFetchingRef = useRef(isFetching);
@@ -117,7 +119,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
     setFilterQuery(e.target.value);
   };
 
-  const onFilterChange = (filterType: string) => {
+  const onFilterChange = (filterType: FILTERS) => {
     setSelectedFilter(filterType);
     setFilterQuery("");
   };
@@ -130,20 +132,6 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
 
   useScrollListener(scrollHandler);
 
-  const paginatedItemsPrepared = useMemo(
-    () =>
-      paginatedData?.filter(Boolean) as Array<
-        NonNullable<(typeof paginatedData)[number]>
-      >,
-    [paginatedData],
-  );
-
-  const filteredProfiles = useFilteredProfiles(
-    paginatedItemsPrepared,
-    selectedFilter,
-    filterQuery,
-  );
-
   if (isLoading) return <>Loading</>;
 
   return (
@@ -155,7 +143,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
         Profiles
       </Typography>
 
-      {pathname.split("/")[1] === "user" && (
+      {pathname.split("/")[3] === "profiles" && (
         <div className="flex items-center gap-4 mb-4 justify-between mr-20">
           {selectedFilter && selectedFilter !== FILTERS.AGE && (
             <FilterInput
@@ -200,8 +188,8 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
         )}
 
         <div className={"flex flex-wrap gap-2"}>
-          {filteredProfiles ? (
-            filteredProfiles.map((profile: IProfile) => (
+          {data?.profiles ? (
+              data?.profiles?.map((profile: IProfile) => (
               <ProfileForm
                 refetch={refetch}
                 key={profile._id}
