@@ -1,5 +1,5 @@
 "use client";
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/types/RootState";
@@ -9,17 +9,21 @@ import { useGetUserByTokenQuery } from "@/lib/api/usersApi";
 import { logout } from "@/lib/slice/authSlice";
 
 export const PrivateProvider = ({ children }: PropsWithChildren) => {
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const router = useRouter();
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const dispatch = useDispatch();
 
-  const accessToken = localStorage.getItem("token");
   const { data: userData, isLoading } = useGetUserByTokenQuery(accessToken, {
     skip: !accessToken,
   });
 
   const isLoadingRef = useRef(isLoading);
   isLoadingRef.current = isLoading;
+
+  useEffect(() => {
+    setAccessToken(localStorage.getItem("token"));
+  }, []);
 
   useEffect(() => {
     if (isAuth && userData) {
