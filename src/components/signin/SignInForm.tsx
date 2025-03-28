@@ -58,7 +58,7 @@ export const SignInForm = () => {
       }
 
       dispatch(setUser(user));
-      if (isRememberMeActive) {
+      if (isRememberMeActive && typeof window !== "undefined") {
         localStorage.setItem("token", accessToken);
         dispatch(login());
       }
