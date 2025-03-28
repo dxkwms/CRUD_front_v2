@@ -1,4 +1,3 @@
-"use client";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
@@ -6,7 +5,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuth: !!localStorage.getItem("token"),
+  isAuth: false,
 };
 
 export const authSlice = createSlice({
