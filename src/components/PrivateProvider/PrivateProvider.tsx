@@ -13,7 +13,7 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const dispatch = useDispatch();
 
-  const accessToken = window.localStorage.getItem("token");
+  const accessToken = localStorage.getItem("token");
   const { data: userData, isLoading } = useGetUserByTokenQuery(accessToken, {
     skip: !accessToken,
   });

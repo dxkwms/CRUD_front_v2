@@ -18,11 +18,16 @@ import { login } from "@/lib/slice/authSlice";
 
 export const SignInForm = () => {
   const [isRememberMeActive, setIsRememberMeActive] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const [authError, setAuthError] = useState("");
   const [signIn] = useSignInMutation();
   const dispatch = useDispatch();
   const router = useRouter();
-  const accessToken = window.localStorage.getItem("token");
+
+  useEffect(() => {
+    const savedValue = localStorage.getItem("token");
+    setAccessToken(savedValue ? savedValue : null);
+  }, []);
 
   const { data: userData, isLoading } = useGetUserByTokenQuery(accessToken, {
     skip: !accessToken,
