@@ -9,6 +9,8 @@ export const LogoutButton = () => {
 
   const onLogout = () => {
     dispatch(logout());
+    localStorage.removeItem("token");
+
     router.push("/signin");
   };
 
