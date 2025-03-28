@@ -1,3 +1,4 @@
+"use client";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
