@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IProfile, IUser } from "@/types/IUser";
-import {FILTERS} from "@/types/filtersEnum";
+import { IProfile, IUser, Role } from "@/types/IUser";
+import { FILTERS } from "@/types/filtersEnum";
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
@@ -38,7 +38,7 @@ export const usersApi = createApi({
     }),
 
     deleteUser: builder.mutation({
-      query: (userId: string) => ({
+      query: (userId?: string) => ({
         url: `users/${userId}`,
         method: "DELETE",
       }),
@@ -52,7 +52,15 @@ export const usersApi = createApi({
       }: {
         userId?: string;
         adminName?: string;
-        updateData: IUser;
+        updateData: {
+          avatar?: string | File | null;
+          _id?: string;
+          name?: string;
+          email?: string;
+          password?: string;
+          role?: Role;
+          accessToken?: string;
+        };
       }) => ({
         url: `users/${userId}`,
         method: "PUT",
@@ -71,11 +79,17 @@ export const usersApi = createApi({
         totalPages: number;
         currentPage: number;
       },
-      { userId: string; page: number; limit: number, searchFilter: string, filterType: FILTERS | null }
+      {
+        userId?: string;
+        page: number;
+        limit: number;
+        searchFilter: string;
+        filterType: FILTERS | null;
+      }
     >({
       query: ({ userId, page, limit, searchFilter, filterType }) => ({
         url: `profiles/${userId}`,
-        params: { page, limit, searchFilter,  filterType },
+        params: { page, limit, searchFilter, filterType },
       }),
     }),
 

@@ -3,7 +3,14 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
-  const filename = searchParams.get("filename");
+  const filename = searchParams.get("filename") ?? "/img/defaultAvatar.png";
+
+  if (!request.body) {
+    return NextResponse.json(
+      { error: "No body content provided" },
+      { status: 400 },
+    );
+  }
 
   const blob = await put(filename, request.body, {
     access: "public",

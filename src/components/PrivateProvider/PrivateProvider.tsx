@@ -20,8 +20,6 @@ export const PrivateProvider = ({ children }: PropsWithChildren) => {
   const isLoadingRef = useRef(isLoading);
   isLoadingRef.current = isLoading;
 
-  const userDataToFix = useSelector((state: RootState) => state.user.user);
-
   useEffect(() => {
     if (isAuth && userData) {
       dispatch(setUser(userData));

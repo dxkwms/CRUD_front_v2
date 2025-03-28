@@ -1,5 +1,5 @@
 import { IUser, Role } from "@/types/IUser";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useRef } from "react";
 import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
 import { FormWrapper } from "@/common/FormWrapper";
 import { Form, Formik } from "formik";
@@ -10,9 +10,17 @@ import { CommonButton } from "@/components/common/CommonButton";
 import { RoleField } from "@/components/common/RoleField";
 
 interface IProps {
-  userData: IUser;
+  userData: IUser | null;
   updateUserError: string;
-  onUserEdit: (values: IUser) => void;
+  onUserEdit: (values: {
+    avatar?: string | File | null;
+    _id?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+    role?: Role;
+    accessToken?: string;
+  }) => void;
   setIsUserEditOpen: Dispatch<SetStateAction<boolean>>;
 }
 export const EditUserForm = ({
@@ -31,12 +39,12 @@ export const EditUserForm = ({
     <FormWrapper>
       <Formik
         initialValues={{
-          name: userData.name,
-          email: userData.email,
-          role: userData.role,
-          avatar: userData.avatar,
+          name: userData?.name,
+          email: userData?.email,
+          role: userData?.role,
+          avatar: userData?.avatar,
         }}
-        onSubmit={(values, { setSubmitting, setFieldError }) => {
+        onSubmit={(values) => {
           onUserEdit(values);
         }}
       >
@@ -56,20 +64,20 @@ export const EditUserForm = ({
             {updateUserError}
             <ProfileField
               type={"name"}
-              value={values.name}
+              value={values.name ?? ""}
               name="name"
-              placeholder={values.name}
+              placeholder={values.name ?? ""}
               onChange={handleChange}
             />
             <ProfileField
               type={"email"}
-              value={values.email}
-              placeholder={values.email}
+              value={values.email ?? ""}
+              placeholder={values.email ?? ""}
               name="email"
               onChange={handleChange}
             />
             <RoleField
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
                 setFieldValue(
                   "role",
                   e.target.checked ? Role.Admin : Role.User,

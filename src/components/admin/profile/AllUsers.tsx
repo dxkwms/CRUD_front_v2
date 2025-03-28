@@ -2,7 +2,7 @@
 import { useGetAllUsersQuery } from "@/lib/api/usersApi";
 import { IUser } from "@/types/IUser";
 import { UserProfile } from "@/components/admin/profile/UserProfile";
-import { ChangeEvent, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { FilterInput } from "@/common/FilterInput";
 import { PAGINATION_LIMIT_COUNT } from "@/types/PAGINATION_LIMIT_COUNT";
 import { PaginationController } from "@/components/pagination/PaginationController";
@@ -38,7 +38,6 @@ export const AllUsers = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading users</p>;
-
 
   return (
     <div>

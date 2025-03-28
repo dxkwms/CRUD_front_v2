@@ -1,5 +1,5 @@
 "use client";
-import { IUser } from "@/types/IUser";
+import { IUser, Role } from "@/types/IUser";
 import {
   useDeleteUserMutation,
   useEditUserMutation,
@@ -41,8 +41,16 @@ export const UserInfo = ({
       refetch();
     }
   };
-  console.log(userData);
-  const onUserEdit = async (updatedValues) => {
+
+  const onUserEdit = async (updatedValues: {
+    avatar?: string | File | null;
+    _id?: string;
+    name?: string;
+    email?: string;
+    password?: string;
+    role?: Role;
+    accessToken?: string;
+  }) => {
     try {
       if (updatedValues.avatar instanceof File) {
         const response = await addAvatar({

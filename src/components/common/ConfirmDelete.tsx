@@ -5,7 +5,7 @@ import { useOutsideDetect } from "@/hooks/common/useOutsideDetect";
 import { FormWrapper } from "@/common/FormWrapper";
 
 interface Props {
-  selectedId?: string;
+  selectedId?: string | null;
   deleteEntityName: string;
   onEntityDelete: (profileId: string) => Promise<void>;
   setIsConfirmOpen: (value: SetStateAction<boolean>) => void;

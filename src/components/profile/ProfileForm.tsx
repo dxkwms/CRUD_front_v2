@@ -43,7 +43,7 @@ export const ProfileForm = ({
       <div
         key={profile._id}
         className="mr-10 relative rounded-3xl bg-[#12130FEB] text-textWhite w-56 shadow-[1px_4px_6px_0px_rgba(0,_0,_0,_0.1)]"
-        onMouseEnter={() => setIsHover(profile._id)}
+        onMouseEnter={() => setIsHover(profile._id ?? "")}
         onMouseLeave={() => setIsHover(null)}
       >
         <div className={"flex items-center ml-2 mb-2 mt-2"}>
@@ -95,7 +95,7 @@ export const ProfileForm = ({
             </button>
             <button
               onClick={() => {
-                setSelectedProfileId(profile._id);
+                setSelectedProfileId(profile._id ?? "");
                 setIsConfirmOpen(true);
               }}
               className="bg-buttonColor text-formBackground p-2 rounded-r-3xl hover:bg-textWhite transition w-1/2"

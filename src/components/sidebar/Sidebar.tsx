@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { LogoutButton } from "@/components/sidebar/LogoutButton";
-import { Typography } from "@/components/common/Typography";
 import { useRouter, usePathname } from "next/navigation";
 import { Role } from "@/types/IUser";
 import { SidebarNavigationButton } from "@/components/sidebar/SidebarNavigationButton";

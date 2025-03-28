@@ -23,7 +23,13 @@ export const UserProfile = ({
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const dispatch = useDispatch();
   const { data, isLoading } = useGetUserProfilesQuery(
-    { userId: user?._id, page: 1, limit: 10 },
+    {
+      userId: user?._id,
+      page: 1,
+      limit: 10,
+      searchFilter: "",
+      filterType: null,
+    },
     {
       skip: !user?._id,
     },
@@ -57,7 +63,7 @@ export const UserProfile = ({
   return (
     <>
       <div
-        onMouseEnter={() => setIsHover(user._id)}
+        onMouseEnter={() => setIsHover(user._id ? user._id : null)}
         onMouseLeave={() => setIsHover(null)}
         className="mb-4 p-2 w-[234px] h-[210px] opacity-95 bg-formBackground rounded-xl text-textWhite flex justify-center items-center flex-col relative"
       >

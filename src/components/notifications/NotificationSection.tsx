@@ -1,5 +1,3 @@
-import { INotification } from "@/types/INotification";
-
-export const NotificationSection = ({ note }: { note: INotification }) => {
+export const NotificationSection = ({ note }: { note: string }) => {
   return <section>{note}</section>;
 };

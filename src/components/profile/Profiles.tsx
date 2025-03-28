@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
 import { IProfile, IUser } from "@/types/IUser";
 import { AddOrEditProfileForm } from "@/components/profile/AddOrEditProfileForm";
 import { ProfileForm } from "@/components/profile/ProfileForm";
@@ -37,7 +37,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   const searchQuery = debouncedValue.length >= 3 ? debouncedValue : "";
 
   const { data, isLoading, isFetching, refetch } = useGetUserProfilesQuery({
-    userId: userData?._id!,
+    userId: userData?._id,
     page,
     limit: PAGINATION_LIMIT_COUNT.profiles_limit,
     filterType: selectedFilter,
@@ -87,7 +87,7 @@ export const Profiles = ({ userData }: { userData: IUser | null }) => {
   };
 
   const onUpdateProfile = async (
-    values,
+    values: IProfile,
     setFieldError: (field: string, message?: string) => void,
   ) => {
     if (!userData?.accessToken) return;

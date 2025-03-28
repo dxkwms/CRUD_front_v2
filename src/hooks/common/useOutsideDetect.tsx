@@ -7,8 +7,8 @@ interface Props {
 
 export const useOutsideDetect = ({ ref, setIsListOpen }: Props): void => {
   useEffect(() => {
-    function isClickOutside(e): void {
-      if (ref.current && !ref.current.contains(e.target)) {
+    function isClickOutside(e: MouseEvent): void {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         setIsListOpen(false);
       }
     }

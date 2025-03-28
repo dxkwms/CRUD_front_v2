@@ -23,3 +23,10 @@ export interface IProfile {
   avatar: string;
   gender: string;
 }
+
+export interface IUserForEdit {
+  role: Role;
+  name: string;
+  avatar: File | null | string;
+  email: string;
+}

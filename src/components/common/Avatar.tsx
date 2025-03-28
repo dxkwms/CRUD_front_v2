@@ -3,7 +3,7 @@ import { Typography } from "@/components/common/Typography";
 import { Dispatch, SetStateAction, useRef } from "react";
 
 interface Props {
-  avatar?: File | null;
+  avatar?: File | null | string;
   setAvatar: Dispatch<SetStateAction<File | null>>;
 }
 
